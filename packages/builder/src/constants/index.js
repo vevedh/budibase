@@ -14,6 +14,7 @@ export const IntegrationNames = {
   COUCHDB: "CouchDB",
   S3: "S3",
   MYSQL: "MySQL",
+  SP2019: "SharePoint 2019",
   REST: "REST",
   DYNAMODB: "DynamoDB",
   ELASTICSEARCH: "ElasticSearch",

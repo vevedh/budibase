@@ -171,6 +171,7 @@ export const IntegrationTypes = {
   COUCHDB: "COUCHDB",
   S3: "S3",
   MYSQL: "MYSQL",
+  SP2019: "SP2019",
   REST: "REST",
   DYNAMODB: "DYNAMODB",
   ELASTICSEARCH: "ELASTICSEARCH",
