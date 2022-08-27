@@ -39,6 +39,41 @@ module SP2019Module {
       },
     },
     query: {
+      create: {
+        type: QueryType.FIELDS,
+        fields: {
+          key: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+          value: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+          ttl: {
+            type: DatasourceFieldType.NUMBER,
+          },
+        },
+      },
+      read: {
+        readable: true,
+        type: QueryType.FIELDS,
+        fields: {
+          key: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+        },
+      },
+      delete: {
+        type: QueryType.FIELDS,
+        fields: {
+          key: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+        },
+      },
       command: {
         readable: true,
         displayName: "Get All List",
@@ -77,6 +112,27 @@ module SP2019Module {
         this.client.dropContext()
         //this.disconnect()
       }
+    }
+
+    async create(query: { key: string; value: string; ttl: number }) {
+      return this.spContext(async () => {
+        const response = null
+        return response
+      })
+    }
+
+    async read(query: { key: string }) {
+      return this.spContext(async () => {
+        const response = null //await this.client.get(query.key)
+        return response
+      })
+    }
+
+    async delete(query: { key: string }) {
+      return this.spContext(async () => {
+        const response = null //await this.client.del(query.key)
+        return response
+      })
     }
 
     async command(query: { json: string }) {
