@@ -9,10 +9,6 @@ module SP2019Module {
     domain: string
   }
 
-  const sp2019 = new JsomNode({
-    modules: ["taxonomy", "userprofiles"],
-  })
-
   const SCHEMA: Integration = {
     // Optional link to docs, which gets shown in the UI.
     docs: "https://github.com/koltyakov/sp-jsom-node",
@@ -57,13 +53,16 @@ module SP2019Module {
 
     constructor(config: sp2019Config) {
       this.config = config
+      const sp2019: JsomNode = new JsomNode({
+        modules: ["taxonomy", "userprofiles"],
+      })
       this.client = sp2019.init({
-        siteUrl: config.siteUrl,
+        siteUrl: this.config.siteUrl,
 
         authOptions: {
-          username: config.username,
-          password: config.password,
-          domain: config.domain,
+          username: this.config.username,
+          password: this.config.password,
+          domain: this.config.domain,
         },
       })
       //.getContext()
