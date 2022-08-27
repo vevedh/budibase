@@ -43,7 +43,7 @@ module SP2019Module {
       },
     },
     query: {
-      getAllList: {
+      command: {
         readable: true,
         displayName: "Get All List",
         type: QueryType.JSON,
@@ -53,38 +53,52 @@ module SP2019Module {
 
   class SP2019Integration {
     private readonly config: sp2019Config
-    private client: any
+    private client: JsomNode
 
     constructor(config: sp2019Config) {
       this.config = config
-      this.client = sp2019
-        .init({
-          siteUrl: config.siteUrl,
+      this.client = sp2019.init({
+        siteUrl: config.siteUrl,
 
-          authOptions: {
-            username: config.username,
-            password: config.password,
-            domain: config.domain,
-          },
-        })
-        .getContext()
+        authOptions: {
+          username: config.username,
+          password: config.password,
+          domain: config.domain,
+        },
+      })
+      //.getContext()
     }
 
-    async getAllList(query: { json: string }) {
-      const oListsCollection = this.client.get_web().get_lists()
-      this.client.load(oListsCollection, "Include(Title)")
-
-      await this.client.executeQueryPromise()
-
-      const listsTitlesArr = oListsCollection
-        .get_data()
-        .map((l: any) => ({ title: l.get_title() }))
-
-      const listsTitlesObj = Object.values(listsTitlesArr)
-
-      return {
-        response: listsTitlesObj,
+    async spContext(query: Function) {
+      try {
+        return await query()
+      } catch (err) {
+        throw new Error(`SharePoint error: ${err}`)
+      } finally {
+        this.client.dropContext()
+        //this.disconnect()
       }
+    }
+
+    async command(query: { json: string }) {
+      return this.spContext(async () => {
+        const ctx: SP.ClientContext = this.client.getContext()
+        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
+        ctx.load(oListsCollection, "Include(Title)")
+
+        await ctx.executeQueryPromise()
+
+        const listsTitlesArr = oListsCollection
+          .get_data()
+          .map((l: any) => ({ title: l.get_title() }))
+
+        const listsTitlesObj = Object.values(listsTitlesArr)
+        console.log("Result list :", listsTitlesObj)
+
+        return {
+          response: listsTitlesObj,
+        }
+      })
     }
   }
 
