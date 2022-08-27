@@ -43,9 +43,9 @@ module SP2019Module {
       },
     },
     query: {
-      command: {
+      getAllList: {
         readable: true,
-        displayName: "SharePoint 2019 Command",
+        displayName: "Get All List",
         type: QueryType.JSON,
       },
     },
@@ -70,9 +70,20 @@ module SP2019Module {
         .getContext()
     }
 
-    async command(query: { json: string }) {
+    async getAllList(query: { json: string }) {
+      const oListsCollection = this.client.get_web().get_lists()
+      this.client.load(oListsCollection, "Include(Title)")
+
+      await this.client.executeQueryPromise()
+
+      const listsTitlesArr = oListsCollection
+        .get_data()
+        .map((l: any) => ({ title: l.get_title() }))
+
+      const listsTitlesObj = Object.values(listsTitlesArr)
+
       return {
-        response: query,
+        response: listsTitlesObj,
       }
     }
   }
