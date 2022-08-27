@@ -32,7 +32,7 @@ module SP2019Module {
         required: true,
       },
       password: {
-        type: "string",
+        type: "password",
         default: "password",
         required: true,
       },
