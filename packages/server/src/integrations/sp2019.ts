@@ -151,9 +151,16 @@ module SP2019Module {
         })
         .getContext()
       const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
-      //ctx.load(oListsCollection, "Include(Title)")
+      ctx.load(oListsCollection, "Include(Title)")
+      ctx.executeQueryAsync(
+        (sender: any) => {
+          return { result: "succès" }
+        },
+        (sender: any, args: SP.ClientRequestFailedEventArgs) => {
+          return { result: "echec" }
+        }
+      )
       //const result = await ctx.executeQueryPromise()
-      return oListsCollection
 
       /*  .then(val => {
             return val
