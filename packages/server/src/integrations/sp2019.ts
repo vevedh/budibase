@@ -141,7 +141,9 @@ module SP2019Module {
         const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
 
-        await ctx.executeQueryPromise()
+        ctx.executeQueryPromise().then(val => {
+          return val
+        })
 
         /*const listsTitlesArr = oListsCollection
           .get_data()
@@ -150,8 +152,6 @@ module SP2019Module {
 
         const listsTitlesObj = Object.values(listsTitlesArr)
         //console.log("Result list :", listsTitlesObj)*/
-
-        return oListsCollection
       })
     }
   }
