@@ -138,7 +138,7 @@ module SP2019Module {
     async command(query: { json: string }) {
       return this.spContext(async () => {
         const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
+        /*const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
 
         await ctx.executeQueryPromise()
@@ -151,7 +151,7 @@ module SP2019Module {
         const listsTitlesObj = Object.values(listsTitlesArr)
         //console.log("Result list :", listsTitlesObj)*/
 
-        return listsTitlesObj[0]
+        return ctx
       })
     }
   }
