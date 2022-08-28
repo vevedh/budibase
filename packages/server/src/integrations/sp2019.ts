@@ -137,18 +137,23 @@ module SP2019Module {
 
     async command(query: { json: string }) {
       //return this.spContext(async () => {
-      const ctx: SP.ClientContext = SP.ClientContext.get_current()
+      const ctx = new JsomNode({
+        modules: ["taxonomy", "userprofiles"],
+      })
+        .init({
+          siteUrl: this.config.siteUrl,
+
+          authOptions: {
+            username: this.config.username,
+            password: this.config.password,
+            domain: this.config.domain,
+          },
+        })
+        .getContext()
       const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
       ctx.load(oListsCollection, "Include(Title)")
-      var response
-      try {
-        const result = await ctx.executeQueryPromise()
-        response = result
-      } catch (err) {
-        throw new Error(`SharePoint error: ${err}`)
-      } finally {
-        response
-      }
+      const result = await ctx.executeQueryPromise()
+      return result
 
       /*  .then(val => {
             return val
