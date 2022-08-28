@@ -146,12 +146,13 @@ module SP2019Module {
         const listsTitlesArr = oListsCollection
           .get_data()
           .map((l: any) => ({ title: l.get_title() }))
+        console.log("Result list :", listsTitlesArr)
 
         const listsTitlesObj = Object.values(listsTitlesArr)
         console.log("Result list :", listsTitlesObj)
 
         return {
-          response: listsTitlesObj,
+          response: "test",
         }
       })
     }
