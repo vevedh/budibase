@@ -141,9 +141,14 @@ module SP2019Module {
         const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
 
-        ctx.executeQueryPromise().then(val => {
-          return val
-        })
+        ctx
+          .executeQueryPromise()
+          .then(val => {
+            return val
+          })
+          .catch(err => {
+            throw new Error(`SharePoint error: ${err}`)
+          })
 
         /*const listsTitlesArr = oListsCollection
           .get_data()
