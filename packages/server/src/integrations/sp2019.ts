@@ -138,12 +138,12 @@ module SP2019Module {
     async command(query: { json: string }) {
       return this.spContext(async () => {
         const ctx: SP.ClientContext = this.client.getContext()
-        /*const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
+        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
 
         await ctx.executeQueryPromise()
 
-        const listsTitlesArr = oListsCollection
+        /*const listsTitlesArr = oListsCollection
           .get_data()
           .map((l: any) => ({ title: l.get_title() }))
         //console.log("Result list :", listsTitlesArr)
@@ -151,7 +151,7 @@ module SP2019Module {
         const listsTitlesObj = Object.values(listsTitlesArr)
         //console.log("Result list :", listsTitlesObj)*/
 
-        return ctx
+        return oListsCollection
       })
     }
   }
