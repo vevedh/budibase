@@ -105,7 +105,10 @@ module SP2019Module {
 
     async spContext(query: Function) {
       try {
-        return await query()
+        const ctx = this.client.getContext()
+        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
+        ctx.load(oListsCollection, "Include(Title)")
+        return await ctx.executeQueryPromise()
       } catch (err) {
         throw new Error(`SharePoint error: ${err}`)
       } finally {
@@ -136,47 +139,9 @@ module SP2019Module {
     }
 
     async command(query: { json: string }) {
-      //return this.spContext(async () => {
-      const ctx = new JsomNode({
-        modules: ["taxonomy", "userprofiles"],
+      return this.spContext(async () => {
+        return { result: "succes" }
       })
-        .init({
-          siteUrl: this.config.siteUrl,
-
-          authOptions: {
-            username: this.config.username,
-            password: this.config.password,
-            domain: this.config.domain,
-          },
-        })
-        .getContext()
-      const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
-      ctx.load(oListsCollection, "Include(Title)")
-      ctx.executeQueryAsync(
-        (sender: any) => {
-          return { result: "succès" }
-        },
-        (sender: any, args: SP.ClientRequestFailedEventArgs) => {
-          return { result: "echec" }
-        }
-      )
-      //const result = await ctx.executeQueryPromise()
-
-      /*  .then(val => {
-            return val
-          })
-          .catch(err => {
-            throw new Error(`SharePoint error: ${err}`)
-          })*/
-
-      /*const listsTitlesArr = oListsCollection
-          .get_data()
-          .map((l: any) => ({ title: l.get_title() }))
-        //console.log("Result list :", listsTitlesArr)
-
-        const listsTitlesObj = Object.values(listsTitlesArr)
-        //console.log("Result list :", listsTitlesObj)*/
-      //})
     }
   }
 
