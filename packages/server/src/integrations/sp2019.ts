@@ -140,9 +140,16 @@ module SP2019Module {
       const ctx: SP.ClientContext = this.client.getContext()
       const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
       ctx.load(oListsCollection, "Include(Title)")
+      var response
+      try {
+        const result = await ctx.executeQueryPromise()
+        response = result
+      } catch (err) {
+        throw new Error(`SharePoint error: ${err}`)
+      } finally {
+        response
+      }
 
-      await ctx.executeQueryPromise()
-      return oListsCollection
       /*  .then(val => {
             return val
           })
