@@ -136,28 +136,28 @@ module SP2019Module {
     }
 
     async command(query: { json: string }) {
-      return this.spContext(async () => {
-        const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
-        ctx.load(oListsCollection, "Include(Title)")
+      //return this.spContext(async () => {
+      const ctx: SP.ClientContext = this.client.getContext()
+      const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
+      ctx.load(oListsCollection, "Include(Title)")
 
-        ctx
-          .executeQueryPromise()
-          .then(val => {
+      await ctx.executeQueryPromise()
+      return oListsCollection
+      /*  .then(val => {
             return val
           })
           .catch(err => {
             throw new Error(`SharePoint error: ${err}`)
-          })
+          })*/
 
-        /*const listsTitlesArr = oListsCollection
+      /*const listsTitlesArr = oListsCollection
           .get_data()
           .map((l: any) => ({ title: l.get_title() }))
         //console.log("Result list :", listsTitlesArr)
 
         const listsTitlesObj = Object.values(listsTitlesArr)
         //console.log("Result list :", listsTitlesObj)*/
-      })
+      //})
     }
   }
 
