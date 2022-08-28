@@ -151,9 +151,9 @@ module SP2019Module {
         })
         .getContext()
       const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
-      ctx.load(oListsCollection, "Include(Title)")
-      const result = await ctx.executeQueryPromise()
-      return result
+      //ctx.load(oListsCollection, "Include(Title)")
+      //const result = await ctx.executeQueryPromise()
+      return oListsCollection
 
       /*  .then(val => {
             return val
