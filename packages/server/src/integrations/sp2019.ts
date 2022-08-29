@@ -59,6 +59,7 @@ module SP2019Module {
   class SP2019Integration implements IntegrationBase {
     private readonly config: sp2019Config
     private client: JsomNode
+    public lists: any
 
     constructor(config: sp2019Config) {
       this.config = config
@@ -74,15 +75,26 @@ module SP2019Module {
           domain: this.config.domain,
         },
       })
+      const ctx: SP.ClientContext = this.client.getContext()
+      const oListsCollection = ctx.get_web().get_lists()
+      ctx.load(oListsCollection, "Include(Title)")
+      ctx
+        .executeQueryPromise()
+        .then(() => {
+          this.lists = JSON.parse(JSON.stringify(oListsCollection))
+        })
+        .catch(err => {
+          throw new Error(`Sharepoint error: ${err}`)
+        })
     }
 
     async read(query: { bucket: string }) {
       const response = await new Promise((resolve, reject) => {
-        const ctx: SP.ClientContext = this.client.getContext()
+        /*const ctx: SP.ClientContext = this.client.getContext()
         const oListsCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
         ctx.executeQueryAsync()
-        /*ctx
+        ctx
           .executeQueryPromise()
           .then(() => {
             resolve({ result: oListsCollection })
@@ -90,7 +102,7 @@ module SP2019Module {
           .catch(err => {
             throw new Error(`Sharepoint error: ${err}`)
           })*/
-        resolve({ result: oListsCollection })
+        resolve({ result: "success" })
       })
 
       return response
