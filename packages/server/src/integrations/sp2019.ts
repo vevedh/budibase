@@ -81,6 +81,7 @@ module SP2019Module {
         const ctx: SP.ClientContext = this.client.getContext()
         const oListsCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
+        ctx.executeQueryAsync()
         /*ctx
           .executeQueryPromise()
           .then(() => {
