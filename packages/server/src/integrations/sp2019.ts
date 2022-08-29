@@ -137,7 +137,6 @@ module SP2019Module {
 
     async command(query: { json: string }) {
       return this.spContext(async () => {
-        const commands = query.json.trim().split(" ")
         const ctx = this.client.getContext()
         const oListsCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
