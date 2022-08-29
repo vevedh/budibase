@@ -84,10 +84,10 @@ module SP2019Module {
         ctx
           .executeQueryPromise()
           .then(() => {
-            resolve({ result: "success" })
+            resolve({ result: oListsCollection })
           })
           .catch(err => {
-            throw new Error(`Redis error: ${err}`)
+            throw new Error(`Sharepoint error: ${err}`)
           })
       })
 
