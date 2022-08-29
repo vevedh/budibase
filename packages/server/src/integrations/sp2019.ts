@@ -1,4 +1,9 @@
-import { DatasourceFieldType, Integration, QueryType } from "@budibase/types"
+import {
+  DatasourceFieldType,
+  Integration,
+  IntegrationBase,
+  QueryType,
+} from "@budibase/types"
 import { JsomNode } from "sp-jsom-node"
 
 module SP2019Module {
@@ -13,7 +18,7 @@ module SP2019Module {
     // Optional link to docs, which gets shown in the UI.
     docs: "https://github.com/koltyakov/sp-jsom-node",
     friendlyName: "SharePoint2019",
-    type: "Non-relational",
+    type: "Object store",
     description:
       "SharePoint2019 Service to manage sharepoint 2019 on-premise server. ",
     datasource: {
@@ -39,50 +44,19 @@ module SP2019Module {
       },
     },
     query: {
-      create: {
-        type: QueryType.FIELDS,
-        fields: {
-          key: {
-            type: DatasourceFieldType.STRING,
-            required: true,
-          },
-          value: {
-            type: DatasourceFieldType.STRING,
-            required: true,
-          },
-          ttl: {
-            type: DatasourceFieldType.NUMBER,
-          },
-        },
-      },
       read: {
-        readable: true,
         type: QueryType.FIELDS,
         fields: {
-          key: {
-            type: DatasourceFieldType.STRING,
+          bucket: {
+            type: "string",
             required: true,
           },
         },
-      },
-      delete: {
-        type: QueryType.FIELDS,
-        fields: {
-          key: {
-            type: DatasourceFieldType.STRING,
-            required: true,
-          },
-        },
-      },
-      command: {
-        readable: true,
-        displayName: "Get All List",
-        type: QueryType.JSON,
       },
     },
   }
 
-  class SP2019Integration {
+  class SP2019Integration implements IntegrationBase {
     private readonly config: sp2019Config
     private client: JsomNode
 
@@ -100,58 +74,14 @@ module SP2019Module {
           domain: this.config.domain,
         },
       })
-      //.getContext()
     }
 
-    async spContext(query: Function) {
-      try {
-        return await query()
-      } catch (err) {
-        throw new Error(`SharePoint error: ${err}`)
-      } finally {
-        this.client.dropContext()
-        //this.disconnect()
-      }
-    }
-
-    async spListContext() {
-      try {
-        const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection = ctx.get_web().get_lists()
-        ctx.load(oListsCollection, "Include(Title)")
-        const result = await ctx.executeQueryPromise()
-        return { result: "success" }
-      } catch (err) {
-        throw new Error(`SharePoint error: ${err}`)
-      } finally {
-        this.client.dropContext()
-        //this.disconnect()
-      }
-    }
-
-    async create(query: { key: string; value: string; ttl: number }) {
-      return this.spContext(async () => {
-        const response = null
-        return response
-      })
-    }
-
-    async read(query: { key: string }) {
-      return this.spContext(async () => {
-        const response = null //await this.client.get(query.key)
-        return response
-      })
-    }
-
-    async delete(query: { key: string }) {
-      return this.spContext(async () => {
-        const response = null //await this.client.del(query.key)
-        return response
-      })
-    }
-
-    async command(query: { json: string }) {
-      return this.spListContext()
+    async read(query: { bucket: string }) {
+      const ctx: SP.ClientContext = this.client.getContext()
+      const oListsCollection = ctx.get_web().get_lists()
+      ctx.load(oListsCollection, "Include(Title)")
+      const result = await ctx.executeQueryPromise()
+      return { result: "success" }
     }
   }
 
