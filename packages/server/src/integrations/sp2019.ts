@@ -105,10 +105,7 @@ module SP2019Module {
 
     async spContext(query: Function) {
       try {
-        const ctx = this.client.getContext()
-        const oListsCollection: SP.ListCollection = ctx.get_web().get_lists()
-        ctx.load(oListsCollection, "Include(Title)")
-        return await ctx.executeQueryPromise()
+        return await query()
       } catch (err) {
         throw new Error(`SharePoint error: ${err}`)
       } finally {
