@@ -77,11 +77,21 @@ module SP2019Module {
     }
 
     async read(query: { bucket: string }) {
-      const ctx: SP.ClientContext = this.client.getContext()
-      const oListsCollection = ctx.get_web().get_lists()
-      ctx.load(oListsCollection, "Include(Title)")
-      //const result = await ctx.executeQueryPromise()
-      return { result: "success" }
+      const response = await new Promise((resolve, reject) => {
+        const ctx: SP.ClientContext = this.client.getContext()
+        const oListsCollection = ctx.get_web().get_lists()
+        ctx.load(oListsCollection, "Include(Title)")
+        ctx
+          .executeQueryPromise()
+          .then(() => {
+            resolve({ result: "success" })
+          })
+          .catch(err => {
+            throw new Error(`Redis error: ${err}`)
+          })
+      })
+
+      return response
     }
   }
 
