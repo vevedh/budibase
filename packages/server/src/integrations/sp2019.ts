@@ -114,6 +114,18 @@ module SP2019Module {
       }
     }
 
+    async spListContext(ctx: Function) {
+      try {
+        const ctx = this.client.getContext()
+        return await ctx.executeQueryPromise()
+      } catch (err) {
+        throw new Error(`SharePoint error: ${err}`)
+      } finally {
+        this.client.dropContext()
+        //this.disconnect()
+      }
+    }
+
     async create(query: { key: string; value: string; ttl: number }) {
       return this.spContext(async () => {
         const response = null
@@ -137,13 +149,13 @@ module SP2019Module {
 
     async command(query: { json: string }) {
       return this.spContext(async () => {
-        const ctx = this.client.getContext()
+        const ctx: SP.ClientContext = this.client.getContext()
         const oListsCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
-        const result = await ctx.executeQueryPromise()
-        return {
-          response: result,
-        }
+
+        return this.spListContext(async () => {
+          return oListsCollection
+        })
       })
     }
   }
