@@ -114,10 +114,13 @@ module SP2019Module {
       }
     }
 
-    async spListContext(ctx: Function) {
+    async spListContext() {
       try {
-        const ctx = this.client.getContext()
-        return await ctx.executeQueryPromise()
+        const ctx: SP.ClientContext = this.client.getContext()
+        const oListsCollection = ctx.get_web().get_lists()
+        ctx.load(oListsCollection, "Include(Title)")
+        const result = await ctx.executeQueryPromise()
+        return { result: "success" }
       } catch (err) {
         throw new Error(`SharePoint error: ${err}`)
       } finally {
@@ -148,15 +151,7 @@ module SP2019Module {
     }
 
     async command(query: { json: string }) {
-      return this.spContext(async () => {
-        const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection = ctx.get_web().get_lists()
-        ctx.load(oListsCollection, "Include(Title)")
-
-        return this.spListContext(async () => {
-          return oListsCollection
-        })
-      })
+      return this.spListContext()
     }
   }
 
