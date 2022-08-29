@@ -79,7 +79,7 @@ module SP2019Module {
     async read(query: { bucket: string }) {
       const response = await new Promise((resolve, reject) => {
         const ctx: SP.ClientContext = this.client.getContext()
-        //const oListsCollection = ctx.get_web().get_lists()
+        const oListsCollection = ctx.get_web().get_lists()
         //ctx.load(oListsCollection, "Include(Title)")
         /*ctx
           .executeQueryPromise()
@@ -89,7 +89,7 @@ module SP2019Module {
           .catch(err => {
             throw new Error(`Sharepoint error: ${err}`)
           })*/
-        resolve({ result: ctx })
+        resolve({ result: oListsCollection })
       })
 
       return response
