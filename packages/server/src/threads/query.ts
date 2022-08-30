@@ -97,6 +97,7 @@ class QueryRunner {
     if (isSQL(datasourceClone)) {
       query = interpolateSQL(fieldsClone, enrichedParameters, integration)
     } else {
+      console.log("IT'S NOT A SQL")
       query = enrichQueryFields(fieldsClone, enrichedContext)
     }
 
