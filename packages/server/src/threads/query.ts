@@ -78,7 +78,7 @@ class QueryRunner {
       .getContext()
     const oListsCollection = spctx.get_web().get_lists()
     spctx.load(oListsCollection, "Include(Title)")
-    await spctx.executeQueryPromise()
+    //await spctx.executeQueryPromise()
     /*spctx
           .executeQueryPromise()
           .then(() => {
