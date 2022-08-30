@@ -35,6 +35,7 @@ export class Thread {
     this.type = type
     this.count = opts.count ? opts.count : 1
     this.disableThreading = this.shouldDisableThreading()
+    console.log("IS THREADING DISABLE :", this.disableThreading)
     if (!this.disableThreading) {
       const workerOpts: any = {
         autoStart: true,
