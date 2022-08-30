@@ -108,6 +108,8 @@ class QueryRunner {
 
     console.log("BEFORE OUTPUT")
     console.log("CTX :", this.ctx)
+    console.log("DATASOURCE :", datasourceClone)
+
     let output = threadUtils.formatResponse(await integration[queryVerb](query))
     let rows = output,
       info = undefined,
