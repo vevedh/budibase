@@ -10,6 +10,7 @@ import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
+import { JsomNode } from "sp-jsom-node"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -127,6 +128,32 @@ function getAuthConfig(ctx: any) {
   return authConfigCtx
 }
 
+async function getSP2019(datasourceClone: any) {
+  const sp2019: JsomNode = new JsomNode({
+    modules: ["taxonomy", "userprofiles"],
+  })
+  const spctx = sp2019
+    .init({
+      siteUrl: datasourceClone.config.siteUrl,
+
+      authOptions: {
+        username: datasourceClone.config.username,
+        password: datasourceClone.config.password,
+        domain: datasourceClone.config.domain,
+      },
+    })
+    .getContext()
+  const oListsCollection = spctx.get_web().get_lists()
+  spctx.load(oListsCollection, "Include(Title)")
+  await spctx.executeQueryPromise()
+  return {
+    rows: { result: "testSP2019" },
+    keys: null,
+    info: null,
+    extra: null,
+  }
+}
+
 export async function preview(ctx: any) {
   const db = getAppDB()
 
@@ -160,12 +187,7 @@ export async function preview(ctx: any) {
     const { rows, keys, info, extra } =
       datasource.source != "SP2019"
         ? await quotas.addQuery(runFn)
-        : {
-            rows: { result: "testSP2019" },
-            keys: null,
-            info: null,
-            extra: null,
-          }
+        : getSP2019(datasource)
     console.log("RUNNER RESULT rows:", rows)
     console.log("RUNNER RESULT keys:", keys)
     console.log("RUNNER RESULT infos:", info)
