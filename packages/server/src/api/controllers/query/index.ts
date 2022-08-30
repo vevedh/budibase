@@ -156,6 +156,7 @@ export async function preview(ctx: any) {
           auth: { ...authConfigCtx },
         },
       })
+    console.log("RUNNER RESULT :", runFn)
     const { rows, keys, info, extra } = await quotas.addQuery(runFn)
     const schemaFields: any = {}
     if (rows?.length > 0) {
