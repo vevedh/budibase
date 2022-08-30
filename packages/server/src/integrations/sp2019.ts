@@ -75,40 +75,26 @@ module SP2019Module {
           domain: this.config.domain,
         },
       })
-      const credentials = {
-        username: this.config.username,
-        password: this.config.password,
-        domain: this.config.domain,
-      }
 
-      /*const ctx: SP.ClientContext = this.client.getContext()
-      const oListsCollection = ctx.get_web().get_lists()
-      ctx.load(oListsCollection, "Include(Title)")
-      ctx
-        .executeQueryPromise()
-        .then(() => {
-          this.lists = JSON.parse(JSON.stringify(oListsCollection))
-        })
-        .catch(err => {
-          throw new Error(`Sharepoint error: ${err}`)
-        })*/
+      /**/
     }
 
     async read(query: { bucket: string }) {
       const response = await new Promise((resolve, reject) => {
-        /*const ctx: SP.ClientContext = this.client.getContext()
+        const ctx: SP.ClientContext = this.client.getContext()
         const oListsCollection = ctx.get_web().get_lists()
         ctx.load(oListsCollection, "Include(Title)")
-        ctx.executeQueryAsync()
+
         ctx
           .executeQueryPromise()
           .then(() => {
-            resolve({ result: oListsCollection })
+            resolve({ result: "succès" })
           })
           .catch(err => {
+            reject(err)
             throw new Error(`Sharepoint error: ${err}`)
-          })*/
-        resolve({ result: "success" })
+          })
+        //resolve({ result: "success" })
       })
 
       return response
