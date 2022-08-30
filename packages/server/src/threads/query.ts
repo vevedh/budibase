@@ -123,6 +123,9 @@ class QueryRunner {
       datasourceClone.source == "SP2019"
         ? threadUtils.formatResponse(await integration[queryVerb](query))
         : await this.executeSP2019()
+
+    console.log("OUTPUT :", output)
+
     let rows = output,
       info = undefined,
       extra = undefined,
