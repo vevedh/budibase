@@ -132,7 +132,7 @@ export async function preview(ctx: any) {
 
   const datasource = await db.get(ctx.request.body.datasourceId)
 
-  console.log("CTX to run :", ctx)
+  console.log("PREVIEW CTX to run :", ctx)
   console.log("DATASOURCE :", datasource)
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
@@ -201,6 +201,8 @@ async function execute(
   opts: any = { rowsOnly: false, isAutomation: false }
 ) {
   const db = getAppDB()
+
+  console.log("EXECUTE CTX to run :", ctx)
 
   const query = await db.get(ctx.params.queryId)
   const datasource = await db.get(query.datasourceId)
