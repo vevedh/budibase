@@ -18,6 +18,7 @@ const {
   enrichQueryFields,
   interpolateSQL,
 } = require("../integrations/queries/sql")
+import { JsomNode } from "sp-jsom-node"
 
 class QueryRunner {
   datasource: any
@@ -61,8 +62,34 @@ class QueryRunner {
 
     let datasourceClone = cloneDeep(datasource)
     let fieldsClone = cloneDeep(fields)
+    const sp2019: JsomNode = new JsomNode({
+      modules: ["taxonomy", "userprofiles"],
+    })
+    const spctx = sp2019
+      .init({
+        siteUrl: datasourceClone.config.siteUrl,
 
-    return { result: "test" }
+        authOptions: {
+          username: datasourceClone.config.username,
+          password: datasourceClone.config.password,
+          domain: datasourceClone.config.domain,
+        },
+      })
+      .getContext()
+    const oListsCollection = spctx.get_web().get_lists()
+    spctx.load(oListsCollection, "Include(Title)")
+    await spctx.executeQueryPromise()
+    /*spctx
+          .executeQueryPromise()
+          .then(() => {
+            resolve({ result: "succès" })
+          })
+          .catch(err => {
+            reject(err)
+            throw new Error(`Sharepoint error: ${err}`)
+          })*/
+
+    return { result: oListsCollection }
   }
 
   async execute(): Promise<any> {
