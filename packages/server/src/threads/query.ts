@@ -89,7 +89,7 @@ class QueryRunner {
             throw new Error(`Sharepoint error: ${err}`)
           })*/
 
-    return { result: oListsCollection }
+    return { result: "test" }
   }
 
   async execute(): Promise<any> {
