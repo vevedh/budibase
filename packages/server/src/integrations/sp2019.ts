@@ -5,7 +5,7 @@ import {
   QueryType,
 } from "@budibase/types"
 import { JsomNode } from "sp-jsom-node"
-import $SP from "sharepointplus"
+
 module SP2019Module {
   interface sp2019Config {
     siteUrl: string
@@ -80,8 +80,6 @@ module SP2019Module {
         password: this.config.password,
         domain: this.config.domain,
       }
-
-      const sp = $SP.auth(credentials)
 
       /*const ctx: SP.ClientContext = this.client.getContext()
       const oListsCollection = ctx.get_web().get_lists()

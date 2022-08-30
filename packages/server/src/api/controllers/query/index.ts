@@ -132,6 +132,7 @@ export async function preview(ctx: any) {
 
   const datasource = await db.get(ctx.request.body.datasourceId)
 
+  console.log("CTX to run :", ctx)
   console.log("DATASOURCE :", datasource)
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
