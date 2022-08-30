@@ -133,7 +133,7 @@ export async function preview(ctx: any) {
   const datasource = await db.get(ctx.request.body.datasourceId)
 
   console.log("PREVIEW CTX to run :", ctx)
-  console.log("DATASOURCE :", datasource)
+  console.log("PREVIEW DATASOURCE :", datasource)
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
   // this stops dynamic variables from calling the same query
@@ -157,7 +157,15 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
+    const { rows, keys, info, extra } =
+      datasource.source != "SP2019"
+        ? await quotas.addQuery(runFn)
+        : {
+            rows: { result: "testSP2019" },
+            keys: null,
+            info: null,
+            extra: null,
+          }
     console.log("RUNNER RESULT rows:", rows)
     console.log("RUNNER RESULT keys:", keys)
     console.log("RUNNER RESULT infos:", info)
