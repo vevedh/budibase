@@ -56,6 +56,15 @@ class QueryRunner {
     this.hasDynamicVariables = false
   }
 
+  async executeSP2019(): Promise<any> {
+    let { datasource, fields, queryVerb, transformer } = this
+
+    let datasourceClone = cloneDeep(datasource)
+    let fieldsClone = cloneDeep(fields)
+
+    return { result: "test" }
+  }
+
   async execute(): Promise<any> {
     let { datasource, fields, queryVerb, transformer } = this
 
@@ -110,7 +119,10 @@ class QueryRunner {
     console.log("CTX :", this.ctx)
     console.log("DATASOURCE :", datasourceClone)
 
-    let output = threadUtils.formatResponse(await integration[queryVerb](query))
+    let output =
+      datasourceClone.source == "SP2019"
+        ? threadUtils.formatResponse(await integration[queryVerb](query))
+        : await this.executeSP2019()
     let rows = output,
       info = undefined,
       extra = undefined,
