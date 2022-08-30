@@ -120,7 +120,7 @@ class QueryRunner {
     console.log("DATASOURCE :", datasourceClone)
 
     let output =
-      datasourceClone.source == "SP2019"
+      datasourceClone.source != "SP2019"
         ? threadUtils.formatResponse(await integration[queryVerb](query))
         : await this.executeSP2019()
 
