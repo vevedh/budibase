@@ -18,7 +18,6 @@ const {
   enrichQueryFields,
   interpolateSQL,
 } = require("../integrations/queries/sql")
-import { JsomNode } from "sp-jsom-node"
 
 class QueryRunner {
   datasource: any
@@ -55,41 +54,6 @@ class QueryRunner {
     this.hasRerun = false
     this.hasRefreshedOAuth = false
     this.hasDynamicVariables = false
-  }
-
-  async executeSP2019(): Promise<any> {
-    let { datasource, fields, queryVerb, transformer } = this
-
-    let datasourceClone = cloneDeep(datasource)
-    let fieldsClone = cloneDeep(fields)
-    const sp2019: JsomNode = new JsomNode({
-      modules: ["taxonomy", "userprofiles"],
-    })
-    const spctx = sp2019
-      .init({
-        siteUrl: datasourceClone.config.siteUrl,
-
-        authOptions: {
-          username: datasourceClone.config.username,
-          password: datasourceClone.config.password,
-          domain: datasourceClone.config.domain,
-        },
-      })
-      .getContext()
-    const oListsCollection = spctx.get_web().get_lists()
-    spctx.load(oListsCollection, "Include(Title)")
-    //await spctx.executeQueryPromise()
-    /*spctx
-          .executeQueryPromise()
-          .then(() => {
-            resolve({ result: "succès" })
-          })
-          .catch(err => {
-            reject(err)
-            throw new Error(`Sharepoint error: ${err}`)
-          })*/
-
-    return { result: "test" }
   }
 
   async execute(): Promise<any> {
@@ -133,7 +97,6 @@ class QueryRunner {
     if (isSQL(datasourceClone)) {
       query = interpolateSQL(fieldsClone, enrichedParameters, integration)
     } else {
-      console.log("IT'S NOT A SQL")
       query = enrichQueryFields(fieldsClone, enrichedContext)
     }
 
@@ -142,16 +105,7 @@ class QueryRunner {
       query.paginationValues = this.pagination
     }
 
-    console.log("BEFORE OUTPUT")
-    console.log("CTX :", this.ctx)
-    console.log("DATASOURCE :", datasourceClone)
-
-    let output =
-      datasourceClone.source != "SP2019"
-        ? threadUtils.formatResponse(await integration[queryVerb](query))
-        : await this.executeSP2019()
-
-    console.log("OUTPUT :", output)
+    let output = threadUtils.formatResponse(await integration[queryVerb](query))
 
     let rows = output,
       info = undefined,

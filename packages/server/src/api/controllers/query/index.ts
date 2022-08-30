@@ -10,7 +10,6 @@ import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
-import { JsomNode } from "sp-jsom-node"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -128,39 +127,11 @@ function getAuthConfig(ctx: any) {
   return authConfigCtx
 }
 
-async function getSP2019(datasourceClone: any) {
-  const sp2019: JsomNode = new JsomNode({
-    modules: ["taxonomy", "userprofiles"],
-  })
-  const spctx = sp2019
-    .init({
-      siteUrl: datasourceClone.config.siteUrl,
-
-      authOptions: {
-        username: datasourceClone.config.username,
-        password: datasourceClone.config.password,
-        domain: datasourceClone.config.domain,
-      },
-    })
-    .getContext()
-  const oListsCollection = spctx.get_web().get_lists()
-  spctx.load(oListsCollection, "Include(Title)")
-  await spctx.executeQueryPromise()
-  return {
-    rows: { result: "testSP2019" },
-    keys: null,
-    info: null,
-    extra: null,
-  }
-}
-
 export async function preview(ctx: any) {
   const db = getAppDB()
 
   const datasource = await db.get(ctx.request.body.datasourceId)
 
-  console.log("PREVIEW CTX to run :", ctx)
-  console.log("PREVIEW DATASOURCE :", datasource)
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
   // this stops dynamic variables from calling the same query
@@ -184,14 +155,8 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } =
-      datasource.source != "SP2019"
-        ? await quotas.addQuery(runFn)
-        : getSP2019(datasource)
-    console.log("RUNNER RESULT rows:", rows)
-    console.log("RUNNER RESULT keys:", keys)
-    console.log("RUNNER RESULT infos:", info)
-    console.log("RUNNER RESULT extras:", extra)
+    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
+
     const schemaFields: any = {}
     if (rows?.length > 0) {
       for (let key of [...new Set(keys)] as string[]) {
@@ -236,8 +201,6 @@ async function execute(
   opts: any = { rowsOnly: false, isAutomation: false }
 ) {
   const db = getAppDB()
-
-  console.log("EXECUTE CTX to run :", ctx)
 
   const query = await db.get(ctx.params.queryId)
   const datasource = await db.get(query.datasourceId)
