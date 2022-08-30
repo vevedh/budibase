@@ -60,10 +60,10 @@ export class Thread {
   }
 
   run(data: any) {
-    console.log("THREAD DATA :", data)
     const timeout = this.timeoutMs
     return new Promise((resolve, reject) => {
       function fire(worker: any) {
+        console.log("THREAD WORKER :", worker)
         worker.execute(data, (err: any, response: any) => {
           if (err && err.type === "TimeoutError") {
             reject(
