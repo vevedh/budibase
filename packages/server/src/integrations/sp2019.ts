@@ -113,13 +113,18 @@ module SP2019Module {
 
     async spContext(query: Function) {
       try {
-        const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection = ctx.get_web().get_lists()
-        ctx.load(oListsCollection, "Include(Title)")
-        await ctx.executeQueryPromise()
+        try {
+          const ctx: SP.ClientContext = this.client.getContext()
+          const oListsCollection = ctx.get_web().get_lists()
+          ctx.load(oListsCollection, "Include(Title)")
+          await ctx.executeQueryPromise()
+        } catch (error) {
+          throw new Error(`Sharepoint error: ${error}`)
+        }
+
         return await query()
       } catch (err) {
-        throw new Error(`Redis error: ${err}`)
+        throw new Error(`Sharepoint error: ${err}`)
       } finally {
         this.client.dropContext()
       }
