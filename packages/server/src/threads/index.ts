@@ -78,6 +78,7 @@ export class Thread {
       }
       // if in test then don't use threading
       if (this.disableThreading) {
+        console.log("DISABLE THREADING")
         import(typeToFile(this.type)).then((thread: any) => {
           fire(thread)
         })
