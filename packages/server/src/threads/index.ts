@@ -65,6 +65,7 @@ export class Thread {
       function fire(worker: any) {
         console.log("THREAD WORKER :", worker)
         worker.execute(data, (err: any, response: any) => {
+          console.log("THREAD WORKER DATA :", worker)
           if (err && err.type === "TimeoutError") {
             reject(
               new Error(`Query response time exceeded ${timeout}ms timeout.`)
@@ -79,6 +80,7 @@ export class Thread {
       // if in test then don't use threading
       if (this.disableThreading) {
         console.log("DISABLE THREADING")
+        console.log("THREADING TYPE :", this.type)
         import(typeToFile(this.type)).then((thread: any) => {
           fire(thread)
         })
