@@ -156,8 +156,12 @@ export async function preview(ctx: any) {
           auth: { ...authConfigCtx },
         },
       })
-    console.log("RUNNER RESULT :", runFn)
+
     const { rows, keys, info, extra } = await quotas.addQuery(runFn)
+    console.log("RUNNER RESULT rows:", rows)
+    console.log("RUNNER RESULT keys:", keys)
+    console.log("RUNNER RESULT infos:", info)
+    console.log("RUNNER RESULT extras:", extra)
     const schemaFields: any = {}
     if (rows?.length > 0) {
       for (let key of [...new Set(keys)] as string[]) {
