@@ -60,6 +60,7 @@ export class Thread {
   }
 
   run(data: any) {
+    console.log("THREAD DATA :", data)
     const timeout = this.timeoutMs
     return new Promise((resolve, reject) => {
       function fire(worker: any) {
