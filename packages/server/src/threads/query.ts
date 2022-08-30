@@ -105,6 +105,7 @@ class QueryRunner {
       query.paginationValues = this.pagination
     }
 
+    console.log("BEFORE OUTPUT")
     let output = threadUtils.formatResponse(await integration[queryVerb](query))
     let rows = output,
       info = undefined,
