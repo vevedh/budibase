@@ -10,6 +10,7 @@ import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
+import { JsomNode } from "sp-jsom-node"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -127,6 +128,30 @@ function getAuthConfig(ctx: any) {
   return authConfigCtx
 }
 
+async function getSP2019(dts: any) {
+  const sp2019: JsomNode = new JsomNode({
+    modules: ["taxonomy", "userprofiles"],
+  })
+  const spctx = sp2019
+    .init({
+      siteUrl: dts.config.siteUrl,
+
+      authOptions: {
+        username: dts.config.username,
+        password: dts.config.password,
+        domain: dts.config.domain,
+      },
+    })
+    .getContext()
+  const oWeb: SP.Web = spctx.get_web()
+  const oListsCollection = spctx.get_web().get_lists()
+  spctx.load(oWeb)
+  spctx.load(oListsCollection, "Include(Title)")
+  await spctx.executeQueryPromise()
+  console.log("List :", oListsCollection)
+  return oListsCollection
+}
+
 export async function preview(ctx: any) {
   const db = getAppDB()
 
@@ -160,7 +185,12 @@ export async function preview(ctx: any) {
 
     const { rows, keys, info, extra } =
       datasource.source == "SP2019"
-        ? { rows: [{ result: "test" }], keys: null, info: null, extra: null }
+        ? {
+            rows: await getSP2019(datasource),
+            keys: null,
+            info: null,
+            extra: null,
+          }
         : await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
@@ -246,7 +276,7 @@ async function execute(
     const { rows, pagination, extra } =
       datasource.source == "SP2019"
         ? {
-            rows: [{ result: "test" }],
+            rows: await getSP2019(datasource),
             pagination: ctx.request.body.pagination,
             extra: null,
           }
