@@ -133,7 +133,7 @@ export async function preview(ctx: any) {
   const datasource = await db.get(ctx.request.body.datasourceId)
 
   console.log("CTX :", ctx)
-  console.log("PREVIWE DATASOURCE :", datasource)
+  console.log("PREVIEW DATASOURCE :", datasource)
 
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
@@ -158,7 +158,10 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
+    const { rows, keys, info, extra } =
+      datasource.source == "SP2019"
+        ? { rows: { result: "test" }, keys: "", info: "", extra: "" }
+        : await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
     if (rows?.length > 0) {
@@ -240,7 +243,10 @@ async function execute(
         },
       })
 
-    const { rows, pagination, extra } = await quotas.addQuery(runFn)
+    const { rows, pagination, extra } =
+      datasource.source == "SP2019"
+        ? { rows: { result: "test" }, pagination: "", extra: "" }
+        : await quotas.addQuery(runFn)
     if (opts && opts.rowsOnly) {
       ctx.body = rows
     } else {
