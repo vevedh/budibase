@@ -4,6 +4,8 @@ const JS_TIMEOUT_MS = 1000
 
 class ScriptRunner {
   constructor(script, context) {
+    console.log("Script to run :", script)
+    console.log("Context to run :", context)
     const code = `let fn = () => {\n${script}\n}; results.out = fn();`
     this.vm = new VM({
       timeout: JS_TIMEOUT_MS,

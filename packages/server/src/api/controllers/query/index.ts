@@ -132,6 +132,9 @@ export async function preview(ctx: any) {
 
   const datasource = await db.get(ctx.request.body.datasourceId)
 
+  console.log("CTX :", ctx)
+  console.log("PREVIWE DATASOURCE :", datasource)
+
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
   // this stops dynamic variables from calling the same query
