@@ -160,7 +160,7 @@ export async function preview(ctx: any) {
 
     const { rows, keys, info, extra } =
       datasource.source == "SP2019"
-        ? { rows: { result: "test" }, keys: "", info: "", extra: "" }
+        ? { rows: [{ result: "test" }], keys: null, info: null, extra: null }
         : await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
@@ -245,7 +245,11 @@ async function execute(
 
     const { rows, pagination, extra } =
       datasource.source == "SP2019"
-        ? { rows: { result: "test" }, pagination: "", extra: "" }
+        ? {
+            rows: [{ result: "test" }],
+            pagination: ctx.request.body.pagination,
+            extra: null,
+          }
         : await quotas.addQuery(runFn)
     if (opts && opts.rowsOnly) {
       ctx.body = rows
