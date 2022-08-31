@@ -82,12 +82,12 @@ module SP2019Module {
 
     async read(query: { bucket: string }) {
       const response = await new Promise((resolve, reject) => {
-        //const ctx: SP.ClientContext = this.client.getContext()
-        const oListsCollection = this.client.getContext().get_web().get_lists()
+        //
         try {
-          this.client.getContext().load(oListsCollection, "Include(Title)")
-          this.client
-            .getContext()
+          const spctx: SP.ClientContext = this.client.getContext()
+          const oListsCollection = spctx.get_web().get_lists()
+          spctx.load(oListsCollection, "Include(Title)")
+          spctx
             .executeQueryPromise()
             .then(() => {
               console.log("List :", oListsCollection)
