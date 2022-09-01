@@ -172,12 +172,14 @@ export async function preview(ctx: any) {
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
         })*/
-      var request = require("request")
+      const request = require("request")
 
-      var options = {
+      const options = {
         method: "POST",
         url: "http://svrdevweb.agglo.local:3030/authentication",
         headers: {
+          "postman-token": "04f2d52c-9fc1-d623-5704-b04de27b2935",
+          "cache-control": "no-cache",
           "content-type": "application/json",
         },
         body: {
@@ -188,9 +190,9 @@ export async function preview(ctx: any) {
         json: true,
       }
 
-      request(options, function (error: any, response: any, body: any) {
+      request(options, (error: any, response: any, body: any) => {
         if (error) throw new Error(error)
-
+        console.log("Test response :", response)
         console.log("Test rest :", body)
       })
     } catch (error) {
