@@ -157,10 +157,12 @@ export async function preview(ctx: any) {
       /*var camlQuery = new SP.CamlQuery();
       camlQuery.set_viewXml('<View><RowLimit>100</RowLimit></View>');
       const collListItem = oListsCollection.getItems(camlQuery);*/
-      const test = await spctx.executeQueryPromise()
-      console.log("List test :", test)
-      console.log("List :", oListsCollection)
-      console.log("Liste detail :", oListsCollection.get_count())
+
+      await spctx.executeQueryPromise()
+      const listsTitlesArr = oListsCollection.get_data().map(l => l.get_title())
+      console.log("List test :", listsTitlesArr)
+      console.log("List :", listsTitlesArr)
+
       console.log("TEST SHAREPOINT :", { result: "success!!!" })
 
       sp2019.dropContext()
