@@ -92,7 +92,7 @@ module SP2019Module {
           spctx
             .executeQueryPromise()
             .then(() => {
-              console.log("List :", oWeb)
+              //console.log("List :", oWeb)
               resolve({ result: "succes" })
             })
             .catch(err => {

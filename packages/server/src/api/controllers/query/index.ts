@@ -10,10 +10,6 @@ import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
-import { JsomNode } from "sp-jsom-node"
-
-import * as spauth from "node-sp-auth"
-import * as sprequest from "sp-request"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -131,60 +127,6 @@ function getAuthConfig(ctx: any) {
   return authConfigCtx
 }
 
-async function getSP2019(dts: any) {
-  /*const sp2019: JsomNode = new JsomNode({
-    modules: ["taxonomy", "userprofiles"],
-  })
-  const spctx = sp2019
-    .init({
-      siteUrl: dts.config.siteUrl,
-
-      authOptions: {
-        username: dts.config.username,
-        password: dts.config.password,
-        domain: dts.config.domain,
-      },
-    })
-    .getContext()
-  const oWeb: SP.Web = spctx.get_web()
-  const oListsCollection = spctx.get_web().get_lists()
-  spctx.load(oWeb)
-  spctx.load(oListsCollection, "Include(Title)")
-  await spctx.executeQueryPromise()
-  console.log("List :", oListsCollection)
-  return oListsCollection*/
-  const sp2019 = sprequest.create({
-    username: dts.config.username,
-    password: dts.config.password,
-    domain: dts.config.domain,
-  })
-  sp2019.requestDigest(dts.config.siteUrl).then(options => {
-    //perform request with any http-enabled library (request-promise in a sample below):
-    return sp2019
-      .post(`${dts.config.siteUrl}/_api/web/lists`, {
-        body: {
-          __metadata: { type: "SP.List" },
-          AllowContentTypes: true,
-          BaseTemplate: 100,
-          ContentTypesEnabled: false,
-          Description: "Test list",
-          //'Title': listTitle
-        },
-        headers: {
-          "X-RequestDigest": options,
-        },
-      })
-      .then((response: any) => {
-        //process data
-        console.log("List :", response)
-        return { result: "succès" }
-      })
-      .catch(err => {
-        return { result: err }
-      })
-  })
-}
-
 export async function preview(ctx: any) {
   const db = getAppDB()
 
@@ -216,15 +158,7 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } =
-      datasource.source == "SP2019"
-        ? {
-            rows: await getSP2019(datasource),
-            keys: null,
-            info: null,
-            extra: null,
-          }
-        : await quotas.addQuery(runFn)
+    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
     if (rows?.length > 0) {
@@ -306,14 +240,7 @@ async function execute(
         },
       })
 
-    const { rows, pagination, extra } =
-      datasource.source == "SP2019"
-        ? {
-            rows: await getSP2019(datasource),
-            pagination: ctx.request.body.pagination,
-            extra: null,
-          }
-        : await quotas.addQuery(runFn)
+    const { rows, pagination, extra } = await quotas.addQuery(runFn)
     if (opts && opts.rowsOnly) {
       ctx.body = rows
     } else {
