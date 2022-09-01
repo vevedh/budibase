@@ -85,14 +85,12 @@ module SP2019Module {
         //
         try {
           const spctx: SP.ClientContext = this.client.getContext()
-          const oWeb: SP.Web = spctx.get_web()
-          spctx.load(oWeb)
-          //const oListsCollection = spctx.get_web().get_lists()
-          //spctx.load(oListsCollection, "Include(Title)")
+          const oListsCollection = spctx.get_web().get_lists()
+          spctx.load(oListsCollection, "Include(Title)")
           spctx
             .executeQueryPromise()
             .then(() => {
-              //console.log("List :", oWeb)
+              console.log("List :", oListsCollection)
               resolve({ result: "succes" })
             })
             .catch(err => {
