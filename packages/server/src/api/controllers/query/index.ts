@@ -12,6 +12,9 @@ import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
 import { JsomNode } from "sp-jsom-node"
 
+import * as spauth from "node-sp-auth"
+import * as request from "request-promise"
+
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
 })
@@ -129,7 +132,7 @@ function getAuthConfig(ctx: any) {
 }
 
 async function getSP2019(dts: any) {
-  const sp2019: JsomNode = new JsomNode({
+  /*const sp2019: JsomNode = new JsomNode({
     modules: ["taxonomy", "userprofiles"],
   })
   const spctx = sp2019
@@ -149,7 +152,29 @@ async function getSP2019(dts: any) {
   spctx.load(oListsCollection, "Include(Title)")
   await spctx.executeQueryPromise()
   console.log("List :", oListsCollection)
-  return oListsCollection
+  return oListsCollection*/
+  spauth
+    .getAuth(dts.config.siteUrl, {
+      username: dts.config.username,
+      password: dts.config.password,
+      domain: dts.config.domain,
+    })
+    .then(options => {
+      //perform request with any http-enabled library (request-promise in a sample below):
+      let headers = options.headers
+      headers["Accept"] = "application/json;odata=verbose"
+
+      request
+        .get({
+          url: `${dts.config.siteUrl}/sites/dsi/_api/web`,
+          headers: headers,
+        })
+        .then((response: any) => {
+          //process data
+          console.log("List :", response)
+          return { result: "succès" }
+        })
+    })
 }
 
 export async function preview(ctx: any) {
