@@ -520,8 +520,7 @@
         "values": [
           {
             "label": "Row Index",
-            "key": "index",
-            "type": "number"
+            "key": "index"
           }
         ]
       }
@@ -2196,23 +2195,19 @@
         "values": [
           {
             "label": "Value",
-            "key": "__value",
-            "type": "object"
+            "key": "__value"
           },
           {
             "label": "Valid",
-            "key": "__valid",
-            "type": "boolean"
+            "key": "__valid"
           },
           {
             "label": "Current Step",
-            "key": "__currentStep",
-            "type": "number"
+            "key": "__currentStep"
           },
           {
             "label": "Current Step Valid",
-            "key": "__currentStepValid",
-            "type": "boolean"
+            "key": "__currentStepValid"
           }
         ]
       },
@@ -3375,28 +3370,23 @@
       "values": [
         {
           "label": "Rows",
-          "key": "rows",
-          "type": "array"
+          "key": "rows"
         },
         {
           "label": "Extra Info",
-          "key": "info",
-          "type": "string"
+          "key": "info"
         },
         {
           "label": "Rows Length",
-          "key": "rowsLength",
-          "type": "number"
+          "key": "rowsLength"
         },
         {
           "label": "Schema",
-          "key": "schema",
-          "type": "object"
+          "key": "schema"
         },
         {
           "label": "Page Number",
-          "key": "pageNumber",
-          "type": "number"
+          "key": "pageNumber"
         }
       ]
     }
@@ -4137,28 +4127,23 @@
         "values": [
           {
             "label": "Rows",
-            "key": "rows",
-            "type": "array"
+            "key": "rows"
           },
           {
             "label": "Extra Info",
-            "key": "info",
-            "type": "string"
+            "key": "info"
           },
           {
             "label": "Rows Length",
-            "key": "rowsLength",
-            "type": "number"
+            "key": "rowsLength"
           },
           {
             "label": "Schema",
-            "key": "schema",
-            "type": "object"
+            "key": "schema"
           },
           {
             "label": "Page Number",
-            "key": "pageNumber",
-            "type": "number"
+            "key": "pageNumber"
           }
         ]
       },
@@ -4168,8 +4153,7 @@
         "values": [
           {
             "label": "Row Index",
-            "key": "index",
-            "type": "number"
+            "key": "index"
           }
         ]
       },
