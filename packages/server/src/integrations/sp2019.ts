@@ -84,9 +84,9 @@ module SP2019Module {
       const response = await new Promise((resolve, reject) => {
         //
         try {
-          const spctx: SP.ClientContext = this.client.getContext()
-          const oListsCollection = spctx.get_web().get_lists()
-          console.log("List :", oListsCollection)
+          //const spctx: SP.ClientContext = this.client.getContext()
+          //const oListsCollection = spctx.get_web().get_lists()
+          //console.log("List :", oListsCollection)
           resolve({ result: "succes" })
           /*spctx.load(oListsCollection, "Include(Title)")
           spctx
