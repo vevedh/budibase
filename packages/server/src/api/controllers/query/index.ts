@@ -13,7 +13,7 @@ import { Cookies, Configs } from "@budibase/backend-core/constants"
 import { JsomNode } from "sp-jsom-node"
 
 import * as spauth from "node-sp-auth"
-import * as request from "request-promise"
+import * as sprequest from "sp-request"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -153,28 +153,36 @@ async function getSP2019(dts: any) {
   await spctx.executeQueryPromise()
   console.log("List :", oListsCollection)
   return oListsCollection*/
-  spauth
-    .getAuth(dts.config.siteUrl, {
-      username: dts.config.username,
-      password: dts.config.password,
-      domain: dts.config.domain,
-    })
-    .then(options => {
-      //perform request with any http-enabled library (request-promise in a sample below):
-      let headers = options.headers
-      headers["Accept"] = "application/json;odata=verbose"
-
-      request
-        .get({
-          url: `${dts.config.siteUrl}/sites/dsi/_api/web`,
-          headers: headers,
-        })
-        .then((response: any) => {
-          //process data
-          console.log("List :", response)
-          return { result: "succès" }
-        })
-    })
+  const sp2019 = sprequest.create({
+    username: dts.config.username,
+    password: dts.config.password,
+    domain: dts.config.domain,
+  })
+  sp2019.requestDigest(dts.config.siteUrl).then(options => {
+    //perform request with any http-enabled library (request-promise in a sample below):
+    return sp2019
+      .post(`${dts.config.siteUrl}/_api/web/lists`, {
+        body: {
+          __metadata: { type: "SP.List" },
+          AllowContentTypes: true,
+          BaseTemplate: 100,
+          ContentTypesEnabled: false,
+          Description: "Test list",
+          //'Title': listTitle
+        },
+        headers: {
+          "X-RequestDigest": options,
+        },
+      })
+      .then((response: any) => {
+        //process data
+        console.log("List :", response)
+        return { result: "succès" }
+      })
+      .catch(err => {
+        return { result: err }
+      })
+  })
 }
 
 export async function preview(ctx: any) {
