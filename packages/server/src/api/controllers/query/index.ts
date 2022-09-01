@@ -152,9 +152,10 @@ export async function preview(ctx: any) {
           },
         })
         .getContext()
-      const oListsCollection = spctx.get_web().get_lists()
+      const oListsCollection: SP.ListCollection = spctx.get_web().get_lists()
       spctx.load(oListsCollection, "Include(Title)")
       console.log("List :", oListsCollection)
+      console.log("Liste detail :", oListsCollection.get_count())
       console.log("TEST SHAREPOINT :", { result: "success!!!" })
       sp2019.dropContext()
       /*spctx
