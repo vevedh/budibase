@@ -138,7 +138,7 @@ export async function preview(ctx: any) {
 
   if (datasource.source == "SP2019") {
     try {
-      const sp2019: JsomNode = new JsomNode({
+      /*const sp2019: JsomNode = new JsomNode({
         modules: ["taxonomy", "userprofiles"],
       })
       const spctx = sp2019
@@ -154,10 +154,6 @@ export async function preview(ctx: any) {
         .getContext()
       const oListsCollection: SP.ListCollection = spctx.get_web().get_lists()
       spctx.load(oListsCollection, "Include(Title)")
-      /*var camlQuery = new SP.CamlQuery();
-      camlQuery.set_viewXml('<View><RowLimit>100</RowLimit></View>');
-      const collListItem = oListsCollection.getItems(camlQuery);*/
-
       await spctx.executeQueryPromise()
       const listsTitlesArr = oListsCollection.get_data().map(l => l.get_title())
       console.log("List test :", listsTitlesArr)
@@ -166,7 +162,7 @@ export async function preview(ctx: any) {
       console.log("TEST SHAREPOINT :", { result: "success!!!" })
 
       sp2019.dropContext()
-      /*spctx
+      spctx
         .executeQueryPromise()
         .then(() => {
           console.log("List :", oListsCollection)
@@ -176,6 +172,25 @@ export async function preview(ctx: any) {
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
         })*/
+        var request = require("request");
+
+        var options = { method: 'POST',
+          url: 'http://svrdevweb.agglo.local:3030/authentication',
+          headers: 
+          { 
+            'content-type': 'application/json' },
+          body: 
+          { strategy: 'ldap',
+            username: 'hdechavigny',
+            password: 'd@nZel!77' },
+          json: true };
+
+        request(options, function (error:any, response:any, body::any) {
+          if (error) throw new Error(error);
+
+          console.log("Test rest :",body);
+        });
+
     } catch (error) {
       console.log(`Sharepoint error: ${error}`)
     }
