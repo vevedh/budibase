@@ -154,7 +154,10 @@ export async function preview(ctx: any) {
         .getContext()
       const oListsCollection = spctx.get_web().get_lists()
       spctx.load(oListsCollection, "Include(Title)")
-      spctx
+      console.log("List :", oListsCollection)
+      console.log("TEST SHAREPOINT :", { result: "success!!!" })
+      sp2019.dropContext()
+      /*spctx
         .executeQueryPromise()
         .then(() => {
           console.log("List :", oListsCollection)
@@ -163,7 +166,7 @@ export async function preview(ctx: any) {
         })
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
-        })
+        })*/
     } catch (error) {
       console.log(`Sharepoint error: ${error}`)
     }
