@@ -154,9 +154,15 @@ export async function preview(ctx: any) {
         .getContext()
       const oListsCollection: SP.ListCollection = spctx.get_web().get_lists()
       spctx.load(oListsCollection, "Include(Title)")
+      /*var camlQuery = new SP.CamlQuery();
+      camlQuery.set_viewXml('<View><RowLimit>100</RowLimit></View>');
+      const collListItem = oListsCollection.getItems(camlQuery);*/
+      const test = await spctx.executeQueryPromise()
+      console.log("List test :", test)
       console.log("List :", oListsCollection)
       console.log("Liste detail :", oListsCollection.get_count())
       console.log("TEST SHAREPOINT :", { result: "success!!!" })
+
       sp2019.dropContext()
       /*spctx
         .executeQueryPromise()
