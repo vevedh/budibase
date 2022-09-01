@@ -158,7 +158,8 @@ export async function preview(ctx: any) {
         .executeQueryPromise()
         .then(() => {
           console.log("List :", oListsCollection)
-          console.log("TEST SHAREPOINT :", { result: "succes" })
+          console.log("TEST SHAREPOINT :", { result: "success!!!" })
+          sp2019.dropContext()
         })
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
