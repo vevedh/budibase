@@ -172,25 +172,27 @@ export async function preview(ctx: any) {
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
         })*/
-        var request = require("request");
+      var request = require("request")
 
-        var options = { method: 'POST',
-          url: 'http://svrdevweb.agglo.local:3030/authentication',
-          headers: 
-          { 
-            'content-type': 'application/json' },
-          body: 
-          { strategy: 'ldap',
-            username: 'hdechavigny',
-            password: 'd@nZel!77' },
-          json: true };
+      var options = {
+        method: "POST",
+        url: "http://svrdevweb.agglo.local:3030/authentication",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: {
+          strategy: "ldap",
+          username: "hdechavigny",
+          password: "d@nZel!77",
+        },
+        json: true,
+      }
 
-        request(options, function (error:any, response:any, body::any) {
-          if (error) throw new Error(error);
+      request(options, function (error: any, response: any, body: any) {
+        if (error) throw new Error(error)
 
-          console.log("Test rest :",body);
-        });
-
+        console.log("Test rest :", body)
+      })
     } catch (error) {
       console.log(`Sharepoint error: ${error}`)
     }
