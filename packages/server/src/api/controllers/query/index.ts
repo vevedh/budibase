@@ -10,6 +10,7 @@ import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
+import { JsomNode } from "sp-jsom-node"
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -134,6 +135,38 @@ export async function preview(ctx: any) {
 
   console.log("CTX :", ctx)
   console.log("PREVIEW DATASOURCE :", datasource)
+
+  if (datasource.source == "SP2019") {
+    try {
+      const sp2019: JsomNode = new JsomNode({
+        modules: ["taxonomy", "userprofiles"],
+      })
+      const spctx = sp2019
+        .init({
+          siteUrl: datasource.config.siteUrl,
+
+          authOptions: {
+            username: datasource.config.username,
+            password: datasource.config.password,
+            domain: datasource.config.domain,
+          },
+        })
+        .getContext()
+      const oListsCollection = spctx.get_web().get_lists()
+      spctx.load(oListsCollection, "Include(Title)")
+      spctx
+        .executeQueryPromise()
+        .then(() => {
+          console.log("List :", oListsCollection)
+          console.log("TEST SHAREPOINT :", { result: "succes" })
+        })
+        .catch(err => {
+          console.log(`Sharepoint error: ${err}`)
+        })
+    } catch (error) {
+      console.log(`Sharepoint error: ${error}`)
+    }
+  }
 
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
