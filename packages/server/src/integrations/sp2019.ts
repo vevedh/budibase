@@ -86,7 +86,9 @@ module SP2019Module {
         try {
           const spctx: SP.ClientContext = this.client.getContext()
           const oListsCollection = spctx.get_web().get_lists()
-          spctx.load(oListsCollection, "Include(Title)")
+          console.log("List :", oListsCollection)
+          resolve({ result: "succes" })
+          /*spctx.load(oListsCollection, "Include(Title)")
           spctx
             .executeQueryPromise()
             .then(() => {
@@ -95,7 +97,7 @@ module SP2019Module {
             })
             .catch(err => {
               reject(`Sharepoint error: ${err}`)
-            })
+            })*/
         } catch (error) {
           reject(`Sharepoint error: ${error}`)
         }
