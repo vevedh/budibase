@@ -172,7 +172,7 @@ export async function preview(ctx: any) {
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
         })*/
-      const request = require("request")
+      const request = require("node-fetch")
 
       const options = {
         method: "POST",
