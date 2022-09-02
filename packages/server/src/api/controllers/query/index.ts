@@ -181,7 +181,7 @@ export async function preview(ctx: any) {
       })
       sharepoint.login((err: any) => {
         if (err) {
-          return console.error(err)
+          return console.log("Error :", err)
         }
         // Once logged in, we can list the "lists" within sharepoint
         sharepoint.lists.list((err: any, listRes: any) => {
