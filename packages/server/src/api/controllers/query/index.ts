@@ -138,7 +138,7 @@ export async function preview(ctx: any) {
 
   if (datasource.source == "SP2019") {
     try {
-      /*const sp2019: JsomNode = new JsomNode({
+      const sp2019: JsomNode = new JsomNode({
         modules: ["taxonomy", "userprofiles"],
       })
       const spctx = sp2019
@@ -171,8 +171,8 @@ export async function preview(ctx: any) {
         })
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
-        })*/
-      const request = require("node-fetch")
+        })
+      /*const request = require("node-fetch")
 
       const options = {
         method: "POST",
@@ -194,7 +194,7 @@ export async function preview(ctx: any) {
         if (error) throw new Error(error)
         console.log("Test response :", response)
         console.log("Test rest :", body)
-      })
+      })*/
     } catch (error) {
       console.log(`Sharepoint error: ${error}`)
     }
@@ -268,6 +268,7 @@ async function execute(
   ctx: any,
   opts: any = { rowsOnly: false, isAutomation: false }
 ) {
+  console.log("EXECUTE...")
   const db = getAppDB()
 
   const query = await db.get(ctx.params.queryId)
