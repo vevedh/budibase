@@ -138,7 +138,7 @@ export async function preview(ctx: any) {
 
   if (datasource.source == "SP2019") {
     try {
-      const sp2019: JsomNode = new JsomNode({
+      /*const sp2019: JsomNode = new JsomNode({
         modules: ["taxonomy", "userprofiles"],
       })
       const spctx = sp2019
@@ -171,30 +171,27 @@ export async function preview(ctx: any) {
         })
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
+        })*/
+      var sharepoint = require("sharepointconnector")({
+        username: datasource.config.username,
+        password: datasource.config.password,
+        // Authentication type - current valid values: ntlm, basic, online,onlinesaml
+        type: "ntlm",
+        url: datasource.config.siteUrl,
+      })
+      sharepoint.login((err: any) => {
+        if (err) {
+          return console.error(err)
+        }
+        // Once logged in, we can list the "lists" within sharepoint
+        sharepoint.lists.list((err: any, listRes: any) => {
+          var aList = listRes[0]
+          // We can pick a particular list, and read it. This also gives us the list's Items[] and Fields[]
+          sharepoint.lists.read(aList.Id, (err: any, listRead: any) => {
+            console.log("List :", listRead)
+          })
         })
-      /*const request = require("node-fetch")
-
-      const options = {
-        method: "POST",
-        url: "http://svrdevweb.agglo.local:3030/authentication",
-        headers: {
-          "postman-token": "04f2d52c-9fc1-d623-5704-b04de27b2935",
-          "cache-control": "no-cache",
-          "content-type": "application/json",
-        },
-        body: {
-          strategy: "ldap",
-          username: "hdechavigny",
-          password: "d@nZel!77",
-        },
-        json: true,
-      }
-
-      request(options, (error: any, response: any, body: any) => {
-        if (error) throw new Error(error)
-        console.log("Test response :", response)
-        console.log("Test rest :", body)
-      })*/
+      })
     } catch (error) {
       console.log(`Sharepoint error: ${error}`)
     }
