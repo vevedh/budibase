@@ -138,28 +138,15 @@ export async function preview(ctx: any) {
 
   if (datasource.source == "SP2019") {
     try {
-      const sp2019: JsomNode = new JsomNode({
-        modules: ["taxonomy", "userprofiles"],
-      })
-      const spctx = sp2019
-        .init({
-          siteUrl: datasource.config.siteUrl,
+      const nodeFetch = require("node-fetch")
 
-          authOptions: {
-            username: datasource.config.username,
-            password: datasource.config.password,
-            domain: datasource.config.domain,
-          },
+      nodeFetch("http://localhost:9090/")
+        .then((res: any) => {
+          console.log("TEST SHAREPOINT :", { result: res })
         })
-        .getContext()
-      const oListsCollection: SP.ListCollection = spctx.get_web().get_lists()
-      spctx.load(oListsCollection, "Include(Title)")
-      await spctx.executeQueryPromise()
-      const listsTitlesArr = oListsCollection.get_data().map(l => l.get_title())
-      console.log("List test :", listsTitlesArr)
-      console.log("List :", listsTitlesArr)
-
-      console.log("TEST SHAREPOINT :", { result: "success!!!" })
+        .catch((err: any) => {
+          console.log("TEST SHAREPOINT :", { err: err })
+        })
 
       /*var sharepoint = require("sharepointconnector")({
       username: datasource.config.username,
