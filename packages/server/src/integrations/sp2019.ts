@@ -188,9 +188,7 @@ module SP2019Module {
       return this.spContext(async () => {
         const result = await this.getSP2019()
         console.log("Sharepoint list :", result)
-        return {
-          response: result,
-        }
+        return result
       })
     }
   }
