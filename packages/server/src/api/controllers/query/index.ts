@@ -143,7 +143,7 @@ export async function preview(ctx: any) {
       })
       const spctx = sp2019
         .init({
-          siteUrl: "http://localhost:9090",
+          siteUrl: "http://budi-sharepoint:9090",
 
           authOptions: {
             username: datasource.config.username,
@@ -161,17 +161,6 @@ export async function preview(ctx: any) {
 
       console.log("TEST SHAREPOINT :", { result: "success!!!" })
 
-      sp2019.dropContext()
-      spctx
-        .executeQueryPromise()
-        .then(() => {
-          console.log("List :", oListsCollection)
-          console.log("TEST SHAREPOINT :", { result: "success!!!" })
-          sp2019.dropContext()
-        })
-        .catch(err => {
-          console.log(`Sharepoint error: ${err}`)
-        })
       /*var sharepoint = require("sharepointconnector")({
       username: datasource.config.username,
       password: datasource.config.password,
