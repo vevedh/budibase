@@ -88,7 +88,7 @@ module SP2019Module {
       },
       command: {
         readable: true,
-        displayName: "Redis Command",
+        displayName: "Sharepoint 2019 Lists Command",
         type: QueryType.JSON,
       },
     },
@@ -155,7 +155,7 @@ module SP2019Module {
 
         //console.log("TEST SHAREPOINT :", await result.json())
         const response = await result.json()
-        return response
+        return JSON.parse(response)
       } catch (error) {
         console.log(`Sharepoint error: ${error}`)
         return { rows: error }
@@ -186,6 +186,7 @@ module SP2019Module {
     async command(query: { json: string }) {
       return this.spContext(async () => {
         const result = await this.getSP2019()
+        console.log("Sharepoint list :", result)
         return {
           response: JSON.parse(result),
         }
