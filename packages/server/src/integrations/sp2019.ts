@@ -14,13 +14,6 @@ module SP2019Module {
     domain: string
   }
 
-  const { Headers } = require("@budibase/backend-core/constants")
-  const {
-    getTenantId,
-    isTenantIdSet,
-  } = require("@budibase/backend-core/tenancy")
-  const env = require("../environment")
-
   const SCHEMA: Integration = {
     // Optional link to docs, which gets shown in the UI.
     docs: "https://github.com/koltyakov/sp-jsom-node",
@@ -102,6 +95,13 @@ module SP2019Module {
     }
 
     request(ctx: any, request: any) {
+      const { Headers } = require("@budibase/backend-core/constants")
+      const {
+        getTenantId,
+        isTenantIdSet,
+      } = require("@budibase/backend-core/tenancy")
+      const env = require("../environment")
+
       if (!request.headers) {
         request.headers = {}
       }
@@ -155,7 +155,8 @@ module SP2019Module {
 
         //console.log("TEST SHAREPOINT :", await result.json())
         const response = await result.json()
-        return JSON.parse(response)
+        console.log("TEST SHAREPOINT :", response)
+        return response
       } catch (error) {
         console.log(`Sharepoint error: ${error}`)
         return { rows: error }
@@ -188,7 +189,7 @@ module SP2019Module {
         const result = await this.getSP2019()
         console.log("Sharepoint list :", result)
         return {
-          response: JSON.parse(result),
+          response: result,
         }
       })
     }
