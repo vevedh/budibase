@@ -137,8 +137,8 @@ export async function preview(ctx: any) {
   console.log("PREVIEW DATASOURCE :", datasource)
 
   if (datasource.source == "SP2019") {
-    try {
-      /*const sp2019: JsomNode = new JsomNode({
+    //try {
+    /*const sp2019: JsomNode = new JsomNode({
         modules: ["taxonomy", "userprofiles"],
       })
       const spctx = sp2019
@@ -172,29 +172,29 @@ export async function preview(ctx: any) {
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
         })*/
-      var sharepoint = require("sharepointconnector")({
-        username: datasource.config.username,
-        password: datasource.config.password,
-        // Authentication type - current valid values: ntlm, basic, online,onlinesaml
-        type: "ntlm",
-        url: datasource.config.siteUrl,
-      })
-      sharepoint.login((err: any) => {
-        if (err) {
-          return console.log("Error :", err)
-        }
-        // Once logged in, we can list the "lists" within sharepoint
-        sharepoint.lists.list((err: any, listRes: any) => {
-          var aList = listRes[0]
-          // We can pick a particular list, and read it. This also gives us the list's Items[] and Fields[]
-          sharepoint.lists.read(aList.Id, (err: any, listRead: any) => {
-            console.log("List :", listRead)
-          })
+    var sharepoint = require("sharepointconnector")({
+      username: datasource.config.username,
+      password: datasource.config.password,
+      // Authentication type - current valid values: ntlm, basic, online,onlinesaml
+      type: "ntlm",
+      url: datasource.config.siteUrl,
+    })
+    sharepoint.login((err: any) => {
+      if (err) {
+        return console.log("Error :", err)
+      }
+      // Once logged in, we can list the "lists" within sharepoint
+      sharepoint.lists.list((err: any, listRes: any) => {
+        var aList = listRes[0]
+        // We can pick a particular list, and read it. This also gives us the list's Items[] and Fields[]
+        sharepoint.lists.read(aList.Id, (err: any, listRead: any) => {
+          console.log("List :", listRead)
         })
       })
-    } catch (error) {
+    })
+    /*} catch (error) {
       console.log(`Sharepoint error: ${error}`)
-    }
+    }*/
   }
 
   const query = ctx.request.body
