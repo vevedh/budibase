@@ -187,7 +187,7 @@ module SP2019Module {
       return this.spContext(async () => {
         const result = await this.getSP2019()
         return {
-          response: result,
+          response: JSON.parse(result),
         }
       })
     }
