@@ -137,13 +137,13 @@ export async function preview(ctx: any) {
   console.log("PREVIEW DATASOURCE :", datasource)
 
   if (datasource.source == "SP2019") {
-    //try {
-    /*const sp2019: JsomNode = new JsomNode({
+    try {
+      const sp2019: JsomNode = new JsomNode({
         modules: ["taxonomy", "userprofiles"],
       })
       const spctx = sp2019
         .init({
-          siteUrl: datasource.config.siteUrl,
+          siteUrl: "http://localhost:9090",
 
           authOptions: {
             username: datasource.config.username,
@@ -171,8 +171,8 @@ export async function preview(ctx: any) {
         })
         .catch(err => {
           console.log(`Sharepoint error: ${err}`)
-        })*/
-    var sharepoint = require("sharepointconnector")({
+        })
+      /*var sharepoint = require("sharepointconnector")({
       username: datasource.config.username,
       password: datasource.config.password,
       // Authentication type - current valid values: ntlm, basic, online,onlinesaml
@@ -191,10 +191,10 @@ export async function preview(ctx: any) {
           console.log("List :", listRead)
         })
       })
-    })
-    /*} catch (error) {
+    })*/
+    } catch (error) {
       console.log(`Sharepoint error: ${error}`)
-    }*/
+    }
   }
 
   const query = ctx.request.body
