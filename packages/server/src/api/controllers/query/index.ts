@@ -12,7 +12,7 @@ import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
 
-const { Headers } = require("@budibase/backend-core/constants")
+/*const { Headers } = require("@budibase/backend-core/constants")
 const { getTenantId, isTenantIdSet } = require("@budibase/backend-core/tenancy")
 const env = require("../../../environment")
 
@@ -39,7 +39,7 @@ function request(ctx: any, request: any) {
     request.headers = ctx.headers
   }
   return request
-}
+}*/
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -131,7 +131,7 @@ export async function save(ctx: any) {
   ctx.message = `Query ${query.name} saved successfully.`
 }
 
-async function getSP2019(dts: any) {
+/*async function getSP2019(dts: any) {
   try {
     const nodeFetch = require("node-fetch")
 
@@ -155,7 +155,7 @@ async function getSP2019(dts: any) {
     console.log(`Sharepoint error: ${error}`)
     return { rows: null, keys: null, info: null, extra: null }
   }
-}
+}*/
 
 export async function find(ctx: any) {
   const db = getAppDB()
@@ -214,10 +214,7 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } =
-      datasource.source == "SP2019"
-        ? await getSP2019(datasource)
-        : await quotas.addQuery(runFn)
+    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
     if (rows?.length > 0) {
@@ -300,10 +297,7 @@ async function execute(
         },
       })
 
-    const { rows, pagination, extra } =
-      datasource.source == "SP2019"
-        ? await getSP2019(datasource)
-        : await quotas.addQuery(runFn)
+    const { rows, pagination, extra } = await quotas.addQuery(runFn)
 
     if (opts && opts.rowsOnly) {
       ctx.body = rows

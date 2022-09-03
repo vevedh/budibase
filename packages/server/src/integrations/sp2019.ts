@@ -5,7 +5,6 @@ import {
   IntegrationBase,
   QueryType,
 } from "@budibase/types"
-import { JsomNode } from "sp-jsom-node"
 
 module SP2019Module {
   interface sp2019Config {
@@ -15,11 +14,18 @@ module SP2019Module {
     domain: string
   }
 
+  const { Headers } = require("@budibase/backend-core/constants")
+  const {
+    getTenantId,
+    isTenantIdSet,
+  } = require("@budibase/backend-core/tenancy")
+  const env = require("../environment")
+
   const SCHEMA: Integration = {
     // Optional link to docs, which gets shown in the UI.
     docs: "https://github.com/koltyakov/sp-jsom-node",
     friendlyName: "SharePoint2019",
-    type: "Object store",
+    type: "Non-relational",
     description:
       "SharePoint2019 Service to manage sharepoint 2019 on-premise server. ",
     datasource: {
@@ -45,65 +51,147 @@ module SP2019Module {
       },
     },
     query: {
-      read: {
+      create: {
         type: QueryType.FIELDS,
         fields: {
-          bucket: {
-            type: "string",
+          key: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+          value: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+          ttl: {
+            type: DatasourceFieldType.NUMBER,
+          },
+        },
+      },
+      read: {
+        readable: true,
+        type: QueryType.FIELDS,
+        fields: {
+          key: {
+            type: DatasourceFieldType.STRING,
             required: true,
           },
         },
       },
+      delete: {
+        type: QueryType.FIELDS,
+        fields: {
+          key: {
+            type: DatasourceFieldType.STRING,
+            required: true,
+          },
+        },
+      },
+      command: {
+        readable: true,
+        displayName: "Redis Command",
+        type: QueryType.JSON,
+      },
     },
   }
 
-  class SP2019Integration implements IntegrationBase {
+  class SP2019Integration {
     private readonly config: sp2019Config
-    private client: JsomNode
-    public lists: any
 
     constructor(config: sp2019Config) {
       this.config = config
-      const sp2019: JsomNode = new JsomNode({
-        modules: ["taxonomy", "userprofiles"],
-      })
-      this.client = sp2019.init({
-        siteUrl: this.config.siteUrl,
-
-        authOptions: {
-          username: this.config.username,
-          password: this.config.password,
-          domain: this.config.domain,
-        },
-      })
-
-      /**/
     }
 
-    async read(query: { bucket: string }) {
-      const response = await new Promise((resolve, reject) => {
-        //
-        try {
-          //const spctx: SP.ClientContext = this.client.getContext()
-          //const oListsCollection = spctx.get_web().get_lists()
-          //console.log("List :", oListsCollection)
-          resolve({ result: "succes" })
-          /*spctx.load(oListsCollection, "Include(Title)")
-          spctx
-            .executeQueryPromise()
-            .then(() => {
-              console.log("List :", oListsCollection)
-              resolve({ result: "succes" })
-            })
-            .catch(err => {
-              reject(`Sharepoint error: ${err}`)
-            })*/
-        } catch (error) {
-          reject(`Sharepoint error: ${error}`)
+    request(ctx: any, request: any) {
+      if (!request.headers) {
+        request.headers = {}
+      }
+      if (!ctx) {
+        request.headers[Headers.API_KEY] = env.INTERNAL_API_KEY
+        if (isTenantIdSet()) {
+          request.headers[Headers.TENANT_ID] = getTenantId()
+        }
+      }
+      if (request.body && Object.keys(request.body).length > 0) {
+        request.headers["Content-Type"] = "application/json"
+        request.body =
+          typeof request.body === "object"
+            ? JSON.stringify(request.body)
+            : request.body
+      } else {
+        delete request.body
+      }
+      if (ctx && ctx.headers) {
+        request.headers = ctx.headers
+      }
+      return request
+    }
+
+    async spContext(query: Function) {
+      try {
+        return await query()
+      } catch (err) {
+        throw new Error(`Redis error: ${err}`)
+      } finally {
+        console.log("end")
+      }
+    }
+
+    async getSP2019() {
+      try {
+        const nodeFetch = require("node-fetch")
+
+        const result = await nodeFetch(
+          "http://localhost:9090/lists",
+          this.request(null, {
+            method: "POST",
+            body: {
+              siteUrl: this.config.siteUrl,
+              username: this.config.username,
+              password: this.config.password,
+              domain: this.config.domain,
+            },
+          })
+        )
+
+        //console.log("TEST SHAREPOINT :", await result.json())
+        const response = await result.json()
+        return response
+      } catch (error) {
+        console.log(`Sharepoint error: ${error}`)
+        return { rows: error }
+      }
+    }
+
+    async create(query: { key: string; value: string; ttl: number }) {
+      return this.spContext(async () => {
+        const response = null
+        return response
+      })
+    }
+
+    async read(query: { key: string }) {
+      return this.spContext(async () => {
+        const response = null
+        return response
+      })
+    }
+
+    async delete(query: { key: string }) {
+      return this.spContext(async () => {
+        const response = null
+        return response
+      })
+    }
+
+    async command(query: { json: string }) {
+      return this.spContext(async () => {
+        const commands = query.json.trim().split(" ")
+
+        const result = await this.getSP2019()
+        return {
+          response: result,
         }
       })
-
-      return response
     }
   }
 
