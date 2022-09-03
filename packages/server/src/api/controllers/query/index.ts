@@ -12,8 +12,6 @@ import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
 
-import { JsomNode } from "sp-jsom-node"
-
 const { Headers } = require("@budibase/backend-core/constants")
 const { getTenantId, isTenantIdSet } = require("@budibase/backend-core/tenancy")
 const env = require("../../../environment")
@@ -133,7 +131,30 @@ export async function save(ctx: any) {
   ctx.message = `Query ${query.name} saved successfully.`
 }
 
-async function getSP2019(dts: any) {}
+async function getSP2019(dts: any) {
+  try {
+    const nodeFetch = require("node-fetch")
+
+    const result = await nodeFetch(
+      "http://localhost:9090/lists",
+      request(null, {
+        method: "POST",
+        body: {
+          siteUrl: dts.config.siteUrl,
+          username: dts.config.username,
+          password: dts.config.password,
+          domain: dts.config.domain,
+        },
+      })
+    )
+
+    //console.log("TEST SHAREPOINT :", await result.json())
+    return { rows: await result.json(), keys: null, info: null, extra: null }
+  } catch (error) {
+    console.log(`Sharepoint error: ${error}`)
+    return { rows: null, keys: null, info: null, extra: null }
+  }
+}
 
 export async function find(ctx: any) {
   const db = getAppDB()
@@ -169,50 +190,6 @@ export async function preview(ctx: any) {
   console.log("CTX :", ctx)
   console.log("PREVIEW DATASOURCE :", datasource)
 
-  if (datasource.source == "SP2019") {
-    try {
-      const nodeFetch = require("node-fetch")
-
-      const result = await nodeFetch(
-        "http://localhost:9090/lists",
-        request(null, {
-          method: "POST",
-          body: {
-            siteUrl: datasource.config.siteUrl,
-            username: datasource.config.username,
-            password: datasource.config.password,
-            domain: datasource.config.domain,
-          },
-        })
-      )
-
-      console.log("TEST SHAREPOINT :", await result.json())
-
-      /*var sharepoint = require("sharepointconnector")({
-      username: datasource.config.username,
-      password: datasource.config.password,
-      // Authentication type - current valid values: ntlm, basic, online,onlinesaml
-      type: "ntlm",
-      url: datasource.config.siteUrl,
-    })
-    sharepoint.login((err: any) => {
-      if (err) {
-        return console.log("Error :", err)
-      }
-      // Once logged in, we can list the "lists" within sharepoint
-      sharepoint.lists.list((err: any, listRes: any) => {
-        var aList = listRes[0]
-        // We can pick a particular list, and read it. This also gives us the list's Items[] and Fields[]
-        sharepoint.lists.read(aList.Id, (err: any, listRead: any) => {
-          console.log("List :", listRead)
-        })
-      })
-    })*/
-    } catch (error) {
-      console.log(`Sharepoint error: ${error}`)
-    }
-  }
-
   const query = ctx.request.body
   // preview may not have a queryId as it hasn't been saved, but if it does
   // this stops dynamic variables from calling the same query
@@ -236,7 +213,10 @@ export async function preview(ctx: any) {
         },
       })
 
-    const { rows, keys, info, extra } = await quotas.addQuery(runFn)
+    const { rows, keys, info, extra } =
+      datasource.source == "SP2019"
+        ? await getSP2019(datasource)
+        : await quotas.addQuery(runFn)
 
     const schemaFields: any = {}
     if (rows?.length > 0) {
