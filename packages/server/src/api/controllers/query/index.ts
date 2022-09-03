@@ -140,13 +140,9 @@ export async function preview(ctx: any) {
     try {
       const nodeFetch = require("node-fetch")
 
-      nodeFetch("http://localhost:9090/")
-        .then((res: any) => {
-          console.log("TEST SHAREPOINT :", { result: res.json() })
-        })
-        .catch((err: any) => {
-          console.log("ERROR SHAREPOINT :", { err: err })
-        })
+      const result = await nodeFetch("http://localhost:9090/")
+
+      console.log("TEST SHAREPOINT :", result)
 
       /*var sharepoint = require("sharepointconnector")({
       username: datasource.config.username,
