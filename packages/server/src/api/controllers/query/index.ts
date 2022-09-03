@@ -5,12 +5,43 @@ import { save as saveDatasource } from "../datasource"
 import { RestImporter } from "./import"
 import { invalidateDynamicVariables } from "../../../threads/utils"
 import { QUERY_THREAD_TIMEOUT } from "../../../environment"
+
 import { getAppDB } from "@budibase/backend-core/context"
 import { quotas } from "@budibase/pro"
 import { events } from "@budibase/backend-core"
 import { getCookie } from "@budibase/backend-core/utils"
 import { Cookies, Configs } from "@budibase/backend-core/constants"
+
 import { JsomNode } from "sp-jsom-node"
+
+const { Headers } = require("@budibase/backend-core/constants")
+const { getTenantId, isTenantIdSet } = require("@budibase/backend-core/tenancy")
+const env = require("../../../environment")
+
+function request(ctx: any, request: any) {
+  if (!request.headers) {
+    request.headers = {}
+  }
+  if (!ctx) {
+    request.headers[Headers.API_KEY] = env.INTERNAL_API_KEY
+    if (isTenantIdSet()) {
+      request.headers[Headers.TENANT_ID] = getTenantId()
+    }
+  }
+  if (request.body && Object.keys(request.body).length > 0) {
+    request.headers["Content-Type"] = "application/json"
+    request.body =
+      typeof request.body === "object"
+        ? JSON.stringify(request.body)
+        : request.body
+  } else {
+    delete request.body
+  }
+  if (ctx && ctx.headers) {
+    request.headers = ctx.headers
+  }
+  return request
+}
 
 const Runner = new Thread(ThreadType.QUERY, {
   timeoutMs: QUERY_THREAD_TIMEOUT || 10000,
@@ -142,15 +173,18 @@ export async function preview(ctx: any) {
     try {
       const nodeFetch = require("node-fetch")
 
-      const result = await nodeFetch("http://localhost:9090/lists", {
-        method: "POST",
-        body: JSON.stringify({
-          siteUrl: datasource.config.siteUrl,
-          username: datasource.config.username,
-          password: datasource.config.password,
-          domain: datasource.config.domain,
-        }),
-      })
+      const result = await nodeFetch(
+        "http://localhost:9090/lists",
+        request(null, {
+          method: "POST",
+          body: {
+            siteUrl: datasource.config.siteUrl,
+            username: datasource.config.username,
+            password: datasource.config.password,
+            domain: datasource.config.domain,
+          },
+        })
+      )
 
       console.log("TEST SHAREPOINT :", await result.json())
 
