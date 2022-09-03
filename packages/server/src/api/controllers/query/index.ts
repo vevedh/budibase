@@ -102,6 +102,8 @@ export async function save(ctx: any) {
   ctx.message = `Query ${query.name} saved successfully.`
 }
 
+async function getSP2019(dts: any) {}
+
 export async function find(ctx: any) {
   const db = getAppDB()
   const query = enrichQueries(await db.get(ctx.params.queryId))
@@ -140,7 +142,15 @@ export async function preview(ctx: any) {
     try {
       const nodeFetch = require("node-fetch")
 
-      const result = await nodeFetch("http://localhost:9090/")
+      const result = await nodeFetch("http://localhost:9090/lists", {
+        method: "POST",
+        body: JSON.stringify({
+          siteUrl: datasource.config.siteUrl,
+          username: datasource.config.username,
+          password: datasource.config.password,
+          domain: datasource.config.domain,
+        }),
+      })
 
       console.log("TEST SHAREPOINT :", await result.json())
 
