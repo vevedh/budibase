@@ -185,8 +185,6 @@ module SP2019Module {
 
     async command(query: { json: string }) {
       return this.spContext(async () => {
-        const commands = query.json.trim().split(" ")
-
         const result = await this.getSP2019()
         return {
           response: result,
