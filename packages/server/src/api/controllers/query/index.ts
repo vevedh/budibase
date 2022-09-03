@@ -149,7 +149,8 @@ async function getSP2019(dts: any) {
     )
 
     //console.log("TEST SHAREPOINT :", await result.json())
-    return { rows: await result.json(), keys: null, info: null, extra: null }
+    const response = await result.json()
+    return { rows: response, keys: null, info: null, extra: null }
   } catch (error) {
     console.log(`Sharepoint error: ${error}`)
     return { rows: null, keys: null, info: null, extra: null }
@@ -299,7 +300,11 @@ async function execute(
         },
       })
 
-    const { rows, pagination, extra } = await quotas.addQuery(runFn)
+    const { rows, pagination, extra } =
+      datasource.source == "SP2019"
+        ? await getSP2019(datasource)
+        : await quotas.addQuery(runFn)
+
     if (opts && opts.rowsOnly) {
       ctx.body = rows
     } else {
