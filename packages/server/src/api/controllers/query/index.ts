@@ -143,7 +143,7 @@ export async function preview(ctx: any) {
       })
       const spctx = sp2019
         .init({
-          siteUrl: "http://budi-sharepoint:9090",
+          siteUrl: datasource.config.siteUrl,
 
           authOptions: {
             username: datasource.config.username,
