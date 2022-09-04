@@ -13,6 +13,11 @@ const googlesheets = require("./googlesheets")
 const firebase = require("./firebase")
 const redis = require("./redis")
 const snowflake = require("./snowflake")
+// pour sharepoint2019
+const sp2019 = require("./sp2019")
+// pour adLdap
+const adldap = require("./adldap")
+
 const { SourceName } = require("@budibase/types")
 const environment = require("../environment")
 
@@ -31,6 +36,8 @@ const DEFINITIONS = {
   [SourceName.FIRESTORE]: firebase.schema,
   [SourceName.REDIS]: redis.schema,
   [SourceName.SNOWFLAKE]: snowflake.schema,
+  [SourceName.SP2019]: sp2019.schema,
+  [SourceName.ADLDAP]: adldap.schema,
 }
 
 const INTEGRATIONS = {
@@ -50,6 +57,8 @@ const INTEGRATIONS = {
   [SourceName.REDIS]: redis.integration,
   [SourceName.FIREBASE]: firebase.integration,
   [SourceName.SNOWFLAKE]: snowflake.integration,
+  [SourceName.SP2019]: sp2019.integration,
+  [SourceName.ADLDAP]: adldap.integration,
 }
 
 // optionally add oracle integration if the oracle binary can be installed

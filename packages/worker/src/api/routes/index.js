@@ -14,6 +14,7 @@ const licenseRoutes = require("./global/license")
 const migrationRoutes = require("./system/migrations")
 const accountRoutes = require("./system/accounts")
 
+
 let userGroupRoutes = api.groups
 exports.routes = [
   configRoutes,
@@ -31,4 +32,5 @@ exports.routes = [
   userGroupRoutes,
   migrationRoutes,
   accountRoutes,
+
 ]

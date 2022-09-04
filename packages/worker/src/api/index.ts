@@ -55,6 +55,7 @@ const PUBLIC_ENDPOINTS = [
     route: "/api/global/users/tenant/:id",
     method: "GET",
   },
+  
 ]
 
 const NO_TENANCY_ENDPOINTS = [
