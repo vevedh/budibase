@@ -51,7 +51,7 @@
     if (admin) {
       menu = menu.concat([
         {
-          title: "Users",
+          title: $t("users"),
           href: "/builder/portal/manage/users",
           heading: $t("manage"),
         },
