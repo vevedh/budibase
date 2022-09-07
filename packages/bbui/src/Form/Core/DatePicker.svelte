@@ -95,6 +95,7 @@
         .slice(0, -1)
     }
 
+    console.log("DATE VALUE :", newValue)
     dispatch("change", newValue)
   }
 
