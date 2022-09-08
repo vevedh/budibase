@@ -196,8 +196,8 @@ export const save = async (
 
   let dbUser: User | undefined
 
-  onsole.log("ID :",_id)
-  console.log("INFOS USER :",user)
+  console.log("ID :",_id)
+  cconsole.log("INFOS USER :",user)
   /*if (_id) {
     console.log("ID :",_id)
     console.log("INFOS USER :",user)
