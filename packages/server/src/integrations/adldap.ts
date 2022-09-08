@@ -2,7 +2,6 @@ import { Integration, QueryType, IntegrationBase, DatasourceFieldType } from "@b
 import { Client } from 'ldapts';
 
 
-module AdLdapModule {
   
 
   interface AdLdapConfig  {
@@ -112,4 +111,4 @@ module AdLdapModule {
     schema: SCHEMA,
     integration: AdLdapIntegration
   }
-}
+
