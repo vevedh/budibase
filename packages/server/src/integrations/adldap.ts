@@ -107,7 +107,7 @@ import { Client } from 'ldapts';
     }
   }
 
-  module.exports = {
+  export default {
     schema: SCHEMA,
     integration: AdLdapIntegration
   }

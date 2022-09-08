@@ -207,7 +207,7 @@ import {
       }
     }
   
-    module.exports = {
+    export default {
       schema: SCHEMA,
       integration: SP2019Integration,
     }
