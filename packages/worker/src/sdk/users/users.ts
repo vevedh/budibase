@@ -195,6 +195,7 @@ export const save = async (
     console.log("ID :",_id)
     // try to get existing user from db
     dbUser = (await db.get(_id)) as User
+    console.log("INFOS DBUSER :",dbUser)
     if (email && dbUser.email !== email) {
       throw "Email address cannot be changed"
     }
