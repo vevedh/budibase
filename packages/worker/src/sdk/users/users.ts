@@ -189,6 +189,9 @@ export const save = async (
   const tenantId = tenancy.getTenantId()
   const db = tenancy.getGlobalDB()
   let { email, _id } = user
+  if (!email && !_id) {
+    throw new Error("_id or email is required")
+  }
 
   if (!email && !_id) {
     throw new Error("_id or email is required")
@@ -202,18 +205,35 @@ export const save = async (
     console.log("ID :",_id)
     console.log("INFOS USER :",user)
     // try to get existing user from db
+<<<<<<< HEAD
     dbUser = (await db.get(_id)) as User
     
     if (email && dbUser.email !== email) {
       throw "Email address cannot be changed"
+=======
+    try {
+      dbUser = (await db.get(_id)) as User
+      if (email && dbUser.email !== email) {
+        throw "Email address cannot be changed"
+      }
+      email = dbUser.email
+    } catch (e: any) {
+      if (e.status === 404) {
+        // do nothing, save this new user with the id specified - required for SSO auth
+      } else {
+        throw e
+      }
+>>>>>>> develop
     }
-    email = dbUser.email
-  } else if (email) {
+  }
+
+  if (!dbUser && email) {
     // no id was specified - load from email instead
     dbUser = await usersCore.getGlobalUserByEmail(email)
     if (dbUser && dbUser._id !== _id) {
       throw `Unavailable`
     }
+<<<<<<< HEAD
   } else {
     throw new Error("_id or email is required")
   }*/
@@ -240,6 +260,8 @@ export const save = async (
     if (dbUser && dbUser._id !== _id) {
       throw `Unavailable`
     }
+=======
+>>>>>>> develop
   }
 
   await validateUniqueUser(email, tenantId)
