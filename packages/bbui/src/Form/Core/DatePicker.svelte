@@ -41,7 +41,7 @@
     noCalendar: timeOnly || false,
     altInput: true,
     time_24hr: time24hr || false,
-    altFormat: timeOnly ? "H:i" : enableTime ? "F j Y, H:i" : "F j, Y",
+    altFormat: timeOnly ? "H:i" : enableTime ? "j F Y, H:i" : "j F Y",
     wrap: true,
     appendTo,
     disableMobile: "true",
