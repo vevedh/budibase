@@ -1,5 +1,6 @@
 <script>
   import Flatpickr from "svelte-flatpickr"
+  import { French } from "flatpickr/dist/l10n/fr.js"
   import "flatpickr/dist/flatpickr.css"
   import "@spectrum-css/inputgroup/dist/index-vars.css"
   import "@spectrum-css/textfield/dist/index-vars.css"
@@ -35,6 +36,7 @@
 
   $: flatpickrOptions = {
     element: `#${flatpickrId}`,
+    locale: French,
     enableTime: timeOnly || enableTime || false,
     noCalendar: timeOnly || false,
     altInput: true,
