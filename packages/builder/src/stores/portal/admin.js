@@ -54,6 +54,8 @@ export function createAdminStore() {
       store.disableAccountPortal = environment.disableAccountPortal
       store.accountPortalUrl = environment.accountPortalUrl
       store.isDev = environment.isDev
+
+      console.log("Get environnement :",store)
       return store
     })
   }

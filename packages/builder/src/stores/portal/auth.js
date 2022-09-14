@@ -37,6 +37,19 @@ export function createAuthStore() {
         user?.license.features.includes(Constants.Features.USER_GROUPS) &&
         user?.featureFlags.includes(FEATURE_FLAGS.USER_GROUPS)
     }
+ 
+    console.log("User infos :",{
+      user: $store.user,
+      tenantId: $store.tenantId,
+      tenantSet: $store.tenantSet,
+      loaded: $store.loaded,
+      postLogout: $store.postLogout,
+      initials,
+      isAdmin,
+      isBuilder,
+      groupsEnabled,
+    })
+
     return {
       user: $store.user,
       tenantId: $store.tenantId,
