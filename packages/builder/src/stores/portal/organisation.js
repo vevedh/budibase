@@ -20,6 +20,7 @@ export function createOrganisationStore() {
   async function init() {
     const tenantId = get(auth).tenantId
     const tenant = await API.getTenantConfig(tenantId)
+    console.log('Init infos :', {...DEFAULT_CONFIG, ...tenant.config, _rev: tenant._rev })
     set({ ...DEFAULT_CONFIG, ...tenant.config, _rev: tenant._rev })
   }
 
