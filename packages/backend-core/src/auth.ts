@@ -1,6 +1,8 @@
 const passport = require("koa-passport")
 const LocalStrategy = require("passport-local").Strategy
 const JwtStrategy = require("passport-jwt").Strategy
+// NTLM Windows auth
+const WindowsStrategy = require('passport-windowsauth').Strategy;
 import { getGlobalDB } from "./tenancy"
 const refresh = require("passport-oauth2-refresh")
 import { Configs } from "./constants"
@@ -9,6 +11,7 @@ import {
   jwt,
   local,
   authenticated,
+  winauth,
   google,
   oidc,
   auditLog,
@@ -28,6 +31,10 @@ import { User } from "@budibase/types"
 // Strategies
 passport.use(new LocalStrategy(local.options, local.authenticate))
 passport.use(new JwtStrategy(jwt.options, jwt.authenticate))
+
+// NTLM Windows auth
+passport.use(new WindowsStrategy(winauth.options,winauth.authenticate))
+
 
 passport.serializeUser((user: User, done: any) => done(null, user))
 
