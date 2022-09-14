@@ -11,7 +11,7 @@ import {
   jwt,
   local,
   authenticated,
-  winauth,
+  //winauth,
   google,
   oidc,
   auditLog,
@@ -33,7 +33,7 @@ passport.use(new LocalStrategy(local.options, local.authenticate))
 passport.use(new JwtStrategy(jwt.options, jwt.authenticate))
 
 // NTLM Windows auth
-passport.use(new WindowsStrategy(winauth.options,winauth.authenticate))
+//passport.use(new WindowsStrategy(winauth.options,winauth.authenticate))
 
 
 passport.serializeUser((user: User, done: any) => done(null, user))
@@ -61,6 +61,7 @@ async function refreshOIDCAccessToken(
 
   try {
     enrichedConfig = await oidc.fetchStrategyConfig(chosenConfig, callbackUrl)
+    console.log("OIDC infos :",enrichedConfig)
     if (!enrichedConfig) {
       throw new Error("OIDC Config contents invalid")
     }
@@ -187,7 +188,7 @@ export = {
   passport,
   google,
   oidc,
-  winauth,
+  //winauth,
   jwt: require("jsonwebtoken"),
   buildTenancyMiddleware: tenancy,
   auditLog,

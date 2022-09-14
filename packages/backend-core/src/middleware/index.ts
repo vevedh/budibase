@@ -2,7 +2,7 @@ const jwt = require("./passport/jwt")
 const local = require("./passport/local")
 const google = require("./passport/google")
 const oidc = require("./passport/oidc")
-const winauth = require("./passport/winauth")
+//const winauth = require("./passport/winauth")
 const { authError, ssoCallbackUrl } = require("./passport/utils")
 const authenticated = require("./authenticated")
 const auditLog = require("./auditLog")
@@ -16,7 +16,7 @@ const builderOnly = require("./builderOnly")
 const joiValidator = require("./joi-validator")
 
 const pkg = {
-  winauth,
+  //winauth,
   google,
   oidc,
   jwt,
