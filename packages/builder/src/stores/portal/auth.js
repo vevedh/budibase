@@ -158,6 +158,7 @@ export function createAuthStore() {
       // We also need to always update the loaded flag.
       try {
         const user = await API.fetchBuilderSelf()
+        console.log('User self :',user)
         setUser(user)
       } catch (error) {
         setUser(null)
@@ -165,6 +166,7 @@ export function createAuthStore() {
     },
     login: async creds => {
       const tenantId = get(store).tenantId
+      console.log('Tenant_ID :',tenantId)
       await API.logIn({
         username: creds.username,
         password: creds.password,
