@@ -93,6 +93,8 @@ const removeSessionAttributesFromUser = ctx => {
 }
 
 exports.getSelf = async ctx => {
+
+  console.log('CTX :',ctx)
   if (!ctx.user) {
     ctx.throw(403, "User not logged in")
   }
