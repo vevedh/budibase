@@ -187,6 +187,7 @@ export = {
   passport,
   google,
   oidc,
+  winauth,
   jwt: require("jsonwebtoken"),
   buildTenancyMiddleware: tenancy,
   auditLog,
