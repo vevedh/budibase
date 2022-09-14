@@ -2,7 +2,7 @@ const passport = require("koa-passport")
 const LocalStrategy = require("passport-local").Strategy
 const JwtStrategy = require("passport-jwt").Strategy
 // NTLM Windows auth
-const WindowsStrategy = require('passport-windowsauth').Strategy;
+const WindowsStrategy = require('passport-windowsauth');
 import { getGlobalDB } from "./tenancy"
 const refresh = require("passport-oauth2-refresh")
 import { Configs } from "./constants"
