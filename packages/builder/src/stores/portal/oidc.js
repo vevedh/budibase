@@ -17,6 +17,7 @@ export function createOidcStore() {
     init: async () => {
       const tenantId = get(auth).tenantId
       const config = await API.getOIDCConfig(tenantId)
+      console.log("OIDC config :",config)
       if (Object.keys(config || {}).length) {
         // Just use the first config for now.
         // We will be support multiple logins buttons later on.
