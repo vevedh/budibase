@@ -6,7 +6,7 @@ exports.options = {
   ldap: {
     url:             'ldap://agglo.local',
     base:            'DC=agglo,DC=local',
-    bindDN:          'ldapquery',
+    bindDN:          'CN=ldapquery,CN=Users,DC=AGGLO,DC=LOCAL',
     bindCredentials: 'Ldap@Cacem972'
   }
 }
