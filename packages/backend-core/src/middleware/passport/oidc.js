@@ -28,7 +28,7 @@ const buildVerifyFn = saveUserFn => {
     done
   ) => {
     console.log("Profile user :",profile)
-    console.log("Profile param:",params)
+    console.log("Profile params:",params)
     const thirdPartyUser = {
       // store the issuer info to enable sync in future
       provider: issuer,
