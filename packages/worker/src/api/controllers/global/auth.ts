@@ -29,6 +29,8 @@ async function authInternal(ctx: any, user: any, err = null, info = null) {
     return ctx.throw(403, info ? info : "Unauthorized")
   }
 
+  console.log("User auth internal :",user)
+
   // set a cookie for browser access
   setCookie(ctx, user.token, Cookies.Auth, { sign: false })
   // set the token in a header as well for APIs
