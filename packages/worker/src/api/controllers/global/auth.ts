@@ -254,6 +254,7 @@ export const oidcAuth = async (ctx: any, next: any) => {
     strategy,
     { successRedirect: "/", failureRedirect: "/error" },
     async (err: any, user: any, info: any) => {
+      console.log("Auth OIDC user :",user)
       await authInternal(ctx, user, err, info)
       await context.identity.doInUserContext(user, async () => {
         await events.auth.login("oidc")
