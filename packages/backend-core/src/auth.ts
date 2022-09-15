@@ -33,7 +33,21 @@ passport.use(new LocalStrategy(local.options, local.authenticate))
 passport.use(new JwtStrategy(jwt.options, jwt.authenticate))
 
 // NTLM Windows auth
-//passport.use(new WindowsStrategy(winauth.options,winauth.authenticate))
+passport.use(new WindowsStrategy({
+  ldap: {
+    url:             'ldap://agglo.local',
+    base:            'DC=agglo,DC=local',
+    bindDN:          'CN=ldapquery,CN=Users,DC=AGGLO,DC=LOCAL',
+    bindCredentials: 'Ldap@Cacem972'
+  }
+}, (profile, done) => {
+  console.log('auth');
+  if (profile) {
+      console.log("LDAP profile",profile);
+      done(null, profile.name);
+  } else
+      done('Not authorized', null);
+}));
 
 
 passport.serializeUser((user: User, done: any) => done(null, user))
