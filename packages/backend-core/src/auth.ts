@@ -40,7 +40,7 @@ passport.use(new WindowsStrategy({
     bindDN:          'CN=ldapquery,CN=Users,DC=AGGLO,DC=LOCAL',
     bindCredentials: 'Ldap@Cacem972'
   }
-}, (profile, done) => {
+}, (profile:any, done:any) => {
   console.log('auth');
   if (profile) {
       console.log("LDAP profile",profile);
