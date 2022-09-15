@@ -30,6 +30,8 @@ exports.authenticateThirdParty = async function (
     return authError(done, "third party user email required")
   }
 
+  console.log("Complete user info :",thirdPartyUser)
+
   // use the third party id
   const userId = generateGlobalUserID(thirdPartyUser.userId)
   const db = getGlobalDB()
