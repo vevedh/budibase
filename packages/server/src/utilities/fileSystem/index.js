@@ -49,7 +49,15 @@ const DATASOURCE_PATH = join(budibaseTempDir(), "datasource")
 exports.init = () => {
   const tempDir = budibaseTempDir()
   if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir)
+    // some test cases fire this quickly enough that
+    // synchronous cases can end up here at the same time
+    try {
+      fs.mkdirSync(tempDir)
+    } catch (err) {
+      if (!err || err.code !== "EEXIST") {
+        throw err
+      }
+    }
   }
   const clientLibPath = join(budibaseTempDir(), "budibase-client.js")
   if (env.isTest() && !fs.existsSync(clientLibPath)) {
@@ -404,6 +412,7 @@ exports.getDatasourcePlugin = async (name, url, hash) => {
       return require(filename)
     } else {
       console.log(`Updating plugin: ${name}`)
+      delete require.cache[require.resolve(filename)]
       fs.unlinkSync(filename)
     }
   }

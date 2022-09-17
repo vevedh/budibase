@@ -8,9 +8,10 @@ import {
   uploadDirectory,
   deleteFolder,
 } from "@budibase/backend-core/objectStore"
-import { PluginType, FileType, PluginSource } from "@budibase/types"
+import { PluginType, FileType, PluginSource, Plugin } from "@budibase/types"
 import env from "../../../environment"
 import { ClientAppSocket } from "../../../websocket"
+import { events } from "@budibase/backend-core"
 
 export async function getPlugins(type?: PluginType) {
   const db = getGlobalDB()
@@ -53,10 +54,6 @@ export async function upload(ctx: any) {
 export async function create(ctx: any) {
   const { source, url, headers, githubToken } = ctx.request.body
 
-  if (!env.SELF_HOSTED) {
-    ctx.throw(400, "Plugins not supported outside of self-host.")
-  }
-
   try {
     let metadata
     let directory
@@ -87,6 +84,13 @@ export async function create(ctx: any) {
 
     validate(metadata?.schema)
 
+    // Only allow components in cloud
+    if (!env.SELF_HOSTED && metadata?.schema?.type !== PluginType.COMPONENT) {
+      throw new Error(
+        "Only component plugins are supported outside of self-host"
+      )
+    }
+
     const doc = await storePlugin(metadata, directory, source)
 
     ctx.body = {
@@ -110,11 +114,12 @@ export async function destroy(ctx: any) {
   const { pluginId } = ctx.params
 
   try {
-    const plugin = await db.get(pluginId)
+    const plugin: Plugin = await db.get(pluginId)
     const bucketPath = `${plugin.name}/`
     await deleteFolder(ObjectStoreBuckets.PLUGINS, bucketPath)
 
     await db.remove(pluginId, plugin._rev)
+    await events.plugin.deleted(plugin)
   } catch (err: any) {
     const errMsg = err?.message ? err?.message : err
 
@@ -128,7 +133,7 @@ export async function destroy(ctx: any) {
 export async function storePlugin(
   metadata: any,
   directory: any,
-  source?: string
+  source?: PluginSource
 ) {
   const db = getGlobalDB()
   const version = metadata.package.version,
@@ -170,7 +175,7 @@ export async function storePlugin(
   } catch (err) {
     rev = undefined
   }
-  let doc = {
+  let doc: Plugin = {
     _id: pluginId,
     _rev: rev,
     ...metadata,
@@ -189,6 +194,7 @@ export async function storePlugin(
   }
 
   const response = await db.put(doc)
+  await events.plugin.imported(doc)
   ClientAppSocket.emit("plugin-update", { name, hash })
   return {
     ...doc,
@@ -196,11 +202,14 @@ export async function storePlugin(
   }
 }
 
-export async function processPlugin(plugin: FileType, source?: string) {
-  if (!env.SELF_HOSTED) {
-    throw new Error("Plugins not supported outside of self-host.")
+export async function processPlugin(plugin: FileType, source?: PluginSource) {
+  const { metadata, directory } = await fileUpload(plugin)
+  validate(metadata?.schema)
+
+  // Only allow components in cloud
+  if (!env.SELF_HOSTED && metadata?.schema?.type !== PluginType.COMPONENT) {
+    throw new Error("Only component plugins are supported outside of self-host")
   }
 
-  const { metadata, directory } = await fileUpload(plugin)
   return await storePlugin(metadata, directory, source)
 }
