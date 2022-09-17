@@ -6,7 +6,7 @@ import {
     QueryType,
   } from "@budibase/types"
   
-  module SP2019Module {
+
     interface sp2019Config {
       siteUrl: string
       username: string
@@ -208,8 +208,8 @@ import {
       }
     }
   
-    module.exports = {
+    export default {
       schema: SCHEMA,
       integration: SP2019Integration,
     }
-  }
+  
