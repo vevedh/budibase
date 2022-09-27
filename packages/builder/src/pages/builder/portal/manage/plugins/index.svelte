@@ -10,7 +10,7 @@
     Search,
   } from "@budibase/bbui"
   import { onMount } from "svelte"
-  import { plugins } from "stores/portal"
+  import { plugins, admin } from "stores/portal"
   import PluginRow from "./_components/PluginRow.svelte"
   import AddPluginModal from "./_components/AddPluginModal.svelte"
 
@@ -20,8 +20,11 @@
   let filterOptions = [
     { label: "All plugins", value: "all" },
     { label: "Components", value: "component" },
-    { label: "Datasources", value: "datasource" },
   ]
+
+  if (!$admin.cloud) {
+    filterOptions.push({ label: "Datasources", value: "datasource" })
+  }
 
   $: filteredPlugins = $plugins
     .filter(plugin => {
@@ -42,7 +45,7 @@
 <Layout noPadding>
   <Layout gap="XS" noPadding>
     <Heading size="M">Plugins</Heading>
-    <Body>Add your own custom datasources and components</Body>
+    <Body>Add your own custom datasources and components.</Body>
   </Layout>
   <Divider size="S" />
   <Layout noPadding>

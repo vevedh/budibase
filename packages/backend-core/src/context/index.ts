@@ -2,7 +2,7 @@ import env from "../environment"
 import { SEPARATOR, DocumentType } from "../db/constants"
 import cls from "./FunctionContext"
 import { dangerousGetDB, closeDB } from "../db"
-import { baseGlobalDBName } from "../tenancy/utils"
+import { baseGlobalDBName } from "../db/tenancy"
 import { IdentityContext } from "@budibase/types"
 import { DEFAULT_TENANT_ID as _DEFAULT_TENANT_ID } from "../constants"
 import { ContextKey } from "./constants"
@@ -224,6 +224,10 @@ export const getAppId = () => {
   } else {
     return foundId
   }
+}
+
+export const isTenancyEnabled = () => {
+  return env.MULTI_TENANCY
 }
 
 /**

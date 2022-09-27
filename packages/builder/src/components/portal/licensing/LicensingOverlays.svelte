@@ -8,6 +8,7 @@
   import { ExpiringKeys } from "./constants"
   import { getBanners } from "./licensingBanners"
   import { banner } from "@budibase/bbui"
+  import { TENANT_FEATURE_FLAGS, isEnabled } from "helpers/featureFlags"
 
   const oneDayInSeconds = 86400
 
@@ -17,8 +18,8 @@
   let paymentFailedModal
   let accountDowngradeModal
   let userLoaded = false
-  let loaded = false
   let licensingLoaded = false
+  let domLoaded = false
   let currentModalCfg = null
 
   const processModals = () => {
@@ -42,7 +43,7 @@
       {
         key: ExpiringKeys.LICENSING_PAYMENT_FAILED,
         criteria: () => {
-          return $licensing.accountPastDue && !$licensing.isFreePlan()
+          return $licensing.accountPastDue && !$licensing.isFreePlan
         },
         action: () => {
           paymentFailedModal.show()
@@ -81,7 +82,18 @@
     }
   }
 
-  $: if (userLoaded && licensingLoaded && loaded) {
+  $: if (!userLoaded && $auth.user) {
+    userLoaded = true
+  }
+
+  $: if (
+    userLoaded &&
+    $licensing.usageMetrics &&
+    domLoaded &&
+    !licensingLoaded &&
+    isEnabled(TENANT_FEATURE_FLAGS.LICENSING)
+  ) {
+    licensingLoaded = true
     queuedModals = processModals()
     queuedBanners = getBanners()
     showNextModal()
@@ -89,18 +101,7 @@
   }
 
   onMount(async () => {
-    auth.subscribe(state => {
-      if (state.user && !userLoaded) {
-        userLoaded = true
-      }
-    })
-
-    licensing.subscribe(state => {
-      if (state.usageMetrics && !licensingLoaded) {
-        licensingLoaded = true
-      }
-    })
-    loaded = true
+    domLoaded = true
   })
 </script>
 
