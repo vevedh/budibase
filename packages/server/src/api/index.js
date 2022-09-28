@@ -60,6 +60,7 @@ router
 
 // error handling middleware
 router.use(async (ctx, next) => {
+  console.log("CTX infos :",ctx)
   try {
     await next()
   } catch (err) {
