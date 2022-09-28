@@ -224,7 +224,7 @@ exports.exportDB = async (dbName, { stream, filter, exportName } = {}) => {
  * @return {string} the path to the temp file.
  */
 exports.storeTempFile = fileContents => {
-  const path = join(budibaseTempDir(), uuid())
+  const path = join(budibaseTempDir(), uuidv4())
   fs.writeFileSync(path, fileContents)
   return path
 }
