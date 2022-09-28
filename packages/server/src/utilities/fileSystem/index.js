@@ -1,8 +1,7 @@
 const { budibaseTempDir } = require("../budibaseDir")
 const fs = require("fs")
 const { join } = require("path")
-import { v4 as uuidv4 } from 'uuid'
-//const uuid = require("uuid/v4")
+const { v4:uuid} = require("uuid")
 const {
   doWithDB,
   dangerousGetDB,
