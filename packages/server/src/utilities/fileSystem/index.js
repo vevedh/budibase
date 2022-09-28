@@ -1,7 +1,8 @@
 const { budibaseTempDir } = require("../budibaseDir")
 const fs = require("fs")
 const { join } = require("path")
-const uuid = require("uuid/v4")
+import { v4 as uuidv4 } from 'uuid'
+//const uuid = require("uuid/v4")
 const {
   doWithDB,
   dangerousGetDB,
@@ -119,7 +120,7 @@ exports.loadHandlebarsFile = path => {
  * @return {Object} the read stream which can be put into the koa context body.
  */
 exports.apiFileReturn = contents => {
-  const path = join(budibaseTempDir(), uuid())
+  const path = join(budibaseTempDir(),uuidv4())
   fs.writeFileSync(path, contents)
   return fs.createReadStream(path)
 }
